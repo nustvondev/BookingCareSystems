@@ -1,0 +1,31 @@
+{
+  "name": "backend_booking_care",
+  "version": "1.0.0",
+  "description": "backend booking care",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nustvondev/BookingCareSystems.git"
+  },
+  "keywords": [
+    "nodejs",
+    "mongodb",
+    "express"
+  ],
+  "author": "hoahuunguyen.dev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nustvondev/BookingCareSystems/issues"
+  },
+  "homepage": "https://github.com/nustvondev/BookingCareSystems#readme",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^7.0.3",
+    "nodemon": "^2.0.22"
+  }
+}

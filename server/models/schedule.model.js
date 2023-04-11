@@ -1,0 +1,31 @@
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
+
+const ScheduleSchema = new Schema(
+  {
+    currentNumber: {
+      type: Number,
+      require: true,
+    },
+    maxNumber: {
+      type: Number,
+      require: true,
+    },
+    date: {
+      type: Date,
+      require: true,
+    },
+    timeType: {
+      type: String,
+      require: true,
+    },
+    doctorId: {
+      type: String,
+      require: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+export default mongoose.model('Schedule', ScheduleSchema);

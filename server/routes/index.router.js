@@ -6,4 +6,5 @@ export let initWebRouters = (app) => {
   // router.get('/api', homeController.getTestapi);
   // router.get('/test', homeController.getTestapi2);
   app.use('/api/auth', authRoute);
+  
 };

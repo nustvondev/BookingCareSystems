@@ -13,7 +13,7 @@ const homeController = {
     };
     return res.status(200).send(datas);
   },
-  register: async (req, res) => {
+  register: async (req, res, next) => {
     try {
       const hash = bcrypt.hashSync(req.body.password, 5);
       const newUser = new User({
@@ -27,5 +27,26 @@ const homeController = {
       next(createError(500, 'Some thing went wrong!'));
     }
   },
+  login: async (req, res, next) => {
+    try {
+      const user = await User.findOne({ email: req.body.email });
+      if (!user) {
+        return next(createError(404, 'User not found!'));
+      }
+      const passwordData = user.password;
+      const passwordInput = req.body.password;
+      const isCorrect = bcrypt.compareSync(passwordInput, passwordData);
+
+      if (!isCorrect) {
+        return next(createError(400, 'User or Password wrong!'));
+      }
+
+      res.status(200).send(user);
+
+    } catch (error) {
+      console.log(error);
+      next(createError(500, 'Some thing went wrong!'));
+    }
+  }
 };
 export default homeController;

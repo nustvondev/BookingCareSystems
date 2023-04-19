@@ -10,8 +10,15 @@ import "./Login.scss";
 class Login extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      email: "",
+      password: "",
+    };
   }
-
+  handleLogin = (e) => {
+    e.preventDefault();
+    console.log(this.state);
+  };
   render() {
     return (
       <div className="logins-containers">
@@ -32,9 +39,23 @@ class Login extends Component {
                 your account
               </h1>
               <div className="login-form">
-                <form action="">
-                  <input type="email" placeholder="E-mail Address" />
-                  <input type="password" placeholder="Password" />
+                <form action="" onSubmit={this.handleLogin}>
+                  <input
+                    type="email"
+                    placeholder="E-mail Address"
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      this.setState({ email: e.target.value });
+                    }}
+                  />
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      this.setState({ password: e.target.value });
+                    }}
+                  />
                   <div className="remember-form">
                     <input type="checkbox" />
                     <span>Remember me</span>

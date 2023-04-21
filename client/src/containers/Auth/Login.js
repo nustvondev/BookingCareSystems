@@ -23,18 +23,24 @@ class Login extends Component {
     });
     try {
       let data = await handleLoginApi(this.state.email, this.state.password);
-      if (data && data.errCode !== 0) {
+      if (data && data.errCode !== 200) {
+        alert("loging failed");
         this.setState({
           errMessage: data.message,
         });
       }
-      if (data && data.errCode === 0) {
-        this.props.userLoginSuccess(data);
-        console.log("loging success");
+      if (data && data.errCode === 200) {
+        //this.props.userLoginSuccess(data.user);
+        alert("loging true");
+        console.log(data.user);
       }
     } catch (e) {
       if (e.response) {
-        if (e.response.data) {
+        if (e.response.status === 401) {
+          this.setState({
+            errMessage: "Invalid email or password",
+          });
+        } else if (e.response.data) {
           this.setState({
             errMessage: e.response.data.message,
           });

@@ -18,7 +18,11 @@ initWebRouters(app);
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || 'Some thing went wrong!';
-  return res.status(errorStatus).send(errorMessage);
+  const errObject = {
+    errCode: errorStatus,
+    message: errorMessage,
+  };
+  return res.status(errorStatus).send(errObject);
 });
 
 app.listen(process.env.BACKEND_PORT || 8080, () => {

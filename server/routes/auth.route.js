@@ -1,11 +1,10 @@
 import express from 'express';
 let router = express.Router();
 // import { regiser, login } from '../controllers/auth.controller.js';
-import homeController from '../controllers/homeController.js';
+import usersController from '../controllers/users.controller.js';
 
-router.post('/register', homeController.register);
-router.get('/test', homeController.getTestapi2);
-router.post('/login', homeController.login);
-router.post('/logout', homeController.logout);
+router.post('/register', usersController.register);
+router.post('/login', usersController.login);
+router.post('/logout', usersController.logout);
 
 export default router;

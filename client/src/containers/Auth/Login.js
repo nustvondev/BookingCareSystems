@@ -4,7 +4,7 @@ import { push } from "connected-react-router";
 import logo from "../../assets/images/logologin.png";
 
 import * as actions from "../../store/actions";
-
+import { handleLoginApi } from "../../services/userService";
 import "./Login.scss";
 
 class Login extends Component {
@@ -13,11 +13,35 @@ class Login extends Component {
     this.state = {
       email: "",
       password: "",
+      errMessage: "",
     };
   }
-  handleLogin = (e) => {
+  handleLogin = async (e) => {
     e.preventDefault();
-    console.log(this.state);
+    this.setState({
+      errMessage: "",
+    });
+    try {
+      let data = await handleLoginApi(this.state.email, this.state.password);
+      if (data && data.errCode !== 0) {
+        this.setState({
+          errMessage: data.message,
+        });
+      }
+      if (data && data.errCode === 0) {
+        this.props.userLoginSuccess(data);
+        console.log("loging success");
+      }
+    } catch (e) {
+      if (e.response) {
+        if (e.response.data) {
+          this.setState({
+            errMessage: e.response.data.message,
+          });
+        }
+      }
+      console.log("error message", e.response);
+    }
   };
   render() {
     return (
@@ -44,7 +68,6 @@ class Login extends Component {
                     type="email"
                     placeholder="E-mail Address"
                     onChange={(e) => {
-                      console.log(e.target.value);
                       this.setState({ email: e.target.value });
                     }}
                   />
@@ -52,7 +75,6 @@ class Login extends Component {
                     type="password"
                     placeholder="Password"
                     onChange={(e) => {
-                      console.log(e.target.value);
                       this.setState({ password: e.target.value });
                     }}
                   />

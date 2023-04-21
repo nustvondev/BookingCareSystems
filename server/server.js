@@ -2,11 +2,13 @@ import express from 'express';
 import { connect } from './config/connectDB.js';
 import bodyParser from 'body-parser';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { initWebRouters } from './routes/index.router.js';
 import { configViewEngine } from './config/viewEngine.js';
 const app = express();
 dotenv.config();
 
+app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -19,7 +21,7 @@ app.use((err, req, res, next) => {
   return res.status(errorStatus).send(errorMessage);
 });
 
-app.listen(process.env.BACKEND_PORT || 8800, () => {
+app.listen(process.env.BACKEND_PORT || 8080, () => {
   connect();
-  console.log('backend is running http://localhost:8800/');
+  console.log('backend is running http://localhost:8080/');
 });

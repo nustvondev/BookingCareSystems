@@ -30,7 +30,7 @@ class Login extends Component {
         });
       }
       if (data && data.errCode === 200) {
-        //this.props.userLoginSuccess(data.user);
+        this.props.userLoginSuccess(data.user);
         alert("loging true");
         console.log(data.user);
       }
@@ -112,7 +112,7 @@ const mapDispatchToProps = (dispatch) => {
   return {
     navigate: (path) => dispatch(push(path)),
     userLoginSuccess: (userInfo) =>
-      dispatch(actions.userLoginSucess(userInfo)),
+      dispatch(actions.userLoginSuccess(userInfo)),
     userLoginFail: () => dispatch(actions.userLoginFail())
   };
 };

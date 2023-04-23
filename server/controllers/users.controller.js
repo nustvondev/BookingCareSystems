@@ -67,6 +67,27 @@ const usersController = {
       .status(200)
       .send('User has been logged out.');
   },
+
+  getUser: async (req, res) => {
+    try {
+      let id = req.body.id;
+      let users = ''
+      if(id === 'ALL'){
+        users = await User.find({}).select("-password");
+      }
+      if(id && id !== 'ALL'){
+        users = await User.findById(id).select("-password");
+      }
+      return res.status(200).json({
+        errCode: 0,
+        errMessage: 'OK',
+        users
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
 };
 
 export default usersController;

@@ -31,7 +31,7 @@ class Login extends Component {
       }
       if (data && data.errCode === 200) {
         this.props.userLoginSuccess(data.user);
-        alert("loging true");
+        //alert("loging true");
         console.log(data.user);
       }
     } catch (e) {
@@ -89,7 +89,8 @@ class Login extends Component {
                     <span>Remember me</span>
                   </div>
                   <div className="forget-pass">
-                    <a href="#">Forgot Password ?</a>
+                    <a href="#">Forgot Password?</a>
+                    <br></br>
                   </div>
                   <button type="submit">LOGIN</button>
                 </form>

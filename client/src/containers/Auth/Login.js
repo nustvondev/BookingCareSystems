@@ -6,6 +6,7 @@ import logo from "../../assets/images/logologin.png";
 import * as actions from "../../store/actions";
 import { handleLoginApi } from "../../services/userService";
 import "./Login.scss";
+import ToastUtil from "../../utils/ToastUtil";
 
 class Login extends Component {
   constructor(props) {
@@ -21,32 +22,44 @@ class Login extends Component {
     this.setState({
       errMessage: "",
     });
-    try {
-      let data = await handleLoginApi(this.state.email, this.state.password);
-      if (data && data.errCode !== 200) {
-        alert("loging failed");
-        this.setState({
-          errMessage: data.message,
-        });
-      }
-      if (data && data.errCode === 200) {
-        this.props.userLoginSuccess(data.user);
-        alert("loging true");
-        console.log(data.user);
-      }
-    } catch (e) {
-      if (e.response) {
-        if (e.response.status === 401) {
+    if (this.state.email === "" || this.state.password === "") {
+      ToastUtil.error(
+        "Thong Bao",
+        "Tai khoan hoac mat khau khong duoc bo trong!"
+      );
+    } else {
+      try {
+        let data = await handleLoginApi(this.state.email, this.state.password);
+        if (data && data.errCode !== 200) {
+          ToastUtil.error(
+            "Thong Bao",
+            "Tai khoan hoac mat khau khong chinh xac!"
+          );
           this.setState({
-            errMessage: "Invalid email or password",
-          });
-        } else if (e.response.data) {
-          this.setState({
-            errMessage: e.response.data.message,
+            errMessage: data.message,
           });
         }
+        if (data && data.errCode === 200) {
+          this.props.userLoginSuccess(data.user);
+          ToastUtil.success("Thong Bao", "Dang nhap thanh cong!");
+          // alert("loging true");
+          // console.log(data.user);
+        }
+      } catch (e) {
+        if (e.response) {
+          if (e.response.status === 401) {
+            this.setState({
+              errMessage: "Invalid email or password",
+            });
+          } else if (e.response.data) {
+            ToastUtil.error("Thong Bao", "Tai khoan khong ton tai!");
+            this.setState({
+              errMessage: e.response.data.message,
+            });
+          }
+        }
+        // console.log("error message", e.response);
       }
-      console.log("error message", e.response);
     }
   };
   render() {
@@ -113,7 +126,7 @@ const mapDispatchToProps = (dispatch) => {
     navigate: (path) => dispatch(push(path)),
     userLoginSuccess: (userInfo) =>
       dispatch(actions.userLoginSuccess(userInfo)),
-    userLoginFail: () => dispatch(actions.userLoginFail())
+    userLoginFail: () => dispatch(actions.userLoginFail()),
   };
 };
 

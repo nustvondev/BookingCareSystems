@@ -91,7 +91,7 @@ class Login extends Component {
                   <div className="forget-pass">
                     <a href="#">Forgot Password ?</a>
                   </div>
-                  <button type="submit">LOG-IN</button>
+                  <button type="submit">LOGIN</button>
                 </form>
               </div>
             </div>

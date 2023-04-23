@@ -67,6 +67,34 @@ const usersController = {
       .status(200)
       .send('User has been logged out.');
   },
+  handleGetAllUsers: async (req, res) => {
+    let id = req.body.id;
+    let user = [];
+    if (!id) {
+      return res.status(200).json({
+        errCode: 1,
+        errMessage: 'Mising parameter.',
+        user,
+      });
+    }
+    try {
+      if (id === 'ALL') {
+        user = await User.find({}).select('-password');
+      }
+      if (id && id !== 'ALL') {
+        user = await User.findOne({ _id: id }).select('-password');
+      }
+
+      return res.status(200).json({
+        errCode: 0,
+        errMessage: 'OK',
+        user,
+      });
+    } catch (error) {
+      next(createError(500, 'Some thing went wrong!'));
+    }
+    res.send({ status: 200 });
+  },
 };
 
 export default usersController;

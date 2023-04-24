@@ -68,33 +68,51 @@ const usersController = {
       .send('User has been logged out.');
   },
   handleGetAllUsers: async (req, res) => {
-    let id = req.body.id;
-    let user = [];
+    let id = req.query.id;
+    let users = [];
     if (!id) {
       return res.status(200).json({
         errCode: 1,
         errMessage: 'Mising parameter.',
-        user,
+        users,
       });
     }
     try {
       if (id === 'ALL') {
-        user = await User.find({}).select('-password');
+        users = await User.find({}).select('-password');
       }
       if (id && id !== 'ALL') {
-        user = await User.findOne({ _id: id }).select('-password');
+        users = await User.findOne({ _id: id }).select('-password');
       }
 
       return res.status(200).json({
         errCode: 0,
         errMessage: 'OK',
-        user,
+        users,
       });
     } catch (error) {
       next(createError(500, 'Some thing went wrong!'));
     }
     res.send({ status: 200 });
   },
+
+  handleCreateNewUser: async (req, res) => {
+    if (!req.body) {
+      return res.status(200).json({
+        errCode: 1,
+        errMessage: 'Missing parameters!',
+      });
+    }
+    try {
+      let checkEmail = await User.find({ email: req.body.email });
+      console.log(checkEmail);
+      res.send(checkEmail.length === 0);
+    } catch (error) {
+      next(createError(500, 'Some thing went wrong!'));
+    }
+  },
+  handleEditUser: () => {},
+  handleDeleteUser: () => {},
 };
 
 export default usersController;

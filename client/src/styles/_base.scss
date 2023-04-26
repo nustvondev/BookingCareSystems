@@ -93,11 +93,11 @@
           font-size: $base-size + 1px;
         }
         .btn-close {
-          position: absolute;
+          position: relative;
           color: $common-text-color;
           i {
             line-height: 35px;
-            font-size: $base-size + 2px;
+            font-size: 15px;
           }
         }
       }

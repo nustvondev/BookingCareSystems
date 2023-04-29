@@ -1,10 +1,9 @@
-/* eslint-disable no-undef */
-/* eslint-disable react/jsx-no-undef */
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { emitter } from "../../utils/emitter";
+
 class ModalUser extends Component {
   constructor(props) {
     super(props);
@@ -18,6 +17,7 @@ class ModalUser extends Component {
 
     this.listenToEmitter();
   }
+
   listenToEmitter() {
     emitter.on("EVENT_CLEAR_MODAL_DATA", () => {
       //reset state
@@ -30,21 +30,68 @@ class ModalUser extends Component {
       });
     });
   }
-  componentDidMount() {}
+
+  componentDidMount() { }
 
   toggle = () => {
     this.props.toggleFromParent();
   };
 
+  handleOnChageInput = (event, id) => {
+    //bad code.modify state
+    /**
+     * this.state = {
+     * email: '',
+     * password: '
+     *
+     * }
+     * this.state.email === this.state['email']
+     *
+     */
+    // this.state[id] = event.target.value;
+    // this.setState({
+    //     ...this.state
+    // }, () => {
+    //     console.log('check bad state: ', this.state)
+    // })
+
+    //good code
+    let copyState = { ...this.state };
+    copyState[id] = event.target.value;
+    this.setState({
+      ...copyState,
+    });
+  };
+
+  checkValidateInput = () => {
+    let isValid = true;
+    let arrInput = ["email", "password", "firstName", "lastName", "address"];
+    for (let i = 0; i < arrInput.length; i++) {
+      if (!this.state[arrInput[i]]) {
+        isValid = false;
+        alert("Missing parameter: " + arrInput[i]);
+        break;
+      }
+    }
+    return isValid;
+  };
+
+  handleAddNewUser = () => {
+    let isValid = this.checkValidateInput();
+    if (isValid === true) {
+      //call api create modal
+      this.props.createNewuser(this.state, "abc");
+    }
+  };
+
   render() {
     return (
-      // eslint-disable-next-line react/jsx-no-undef, no-undef
       <Modal
         isOpen={this.props.isOpen}
         toggle={() => {
           this.toggle();
         }}
-        className="modal-user-container"
+        className={"modal-user-container"}
         size="lg"
       >
         <ModalHeader
@@ -52,29 +99,59 @@ class ModalUser extends Component {
             this.toggle();
           }}
         >
-          Create a New User
+          Create a new user
         </ModalHeader>
         <ModalBody>
           <div className="modal-user-body">
             <div className="input-container">
               <label>Email</label>
-              <input type="email" />
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnChageInput(event, "email");
+                }}
+                value={this.state.email}
+              />
             </div>
             <div className="input-container">
               <label>Password</label>
-              <input type="password" />
+              <input
+                type="password"
+                onChange={(event) => {
+                  this.handleOnChageInput(event, "password");
+                }}
+                value={this.state.password}
+              />
             </div>
             <div className="input-container">
-              <label>First Name</label>
-              <input type="text" />
+              <label>First name</label>
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnChageInput(event, "firstName");
+                }}
+                value={this.state.firstName}
+              />
             </div>
             <div className="input-container">
-              <label>Last Name</label>
-              <input type="text" />
+              <label>Last name</label>
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnChageInput(event, "lastName");
+                }}
+                value={this.state.lastName}
+              />
             </div>
             <div className="input-container max-width-input">
               <label>Address</label>
-              <input type="text" />
+              <input
+                type="text"
+                onChange={(event) => {
+                  this.handleOnChageInput(event, "address");
+                }}
+                value={this.state.address}
+              />
             </div>
           </div>
         </ModalBody>
@@ -83,10 +160,10 @@ class ModalUser extends Component {
             color="primary"
             className="px-3"
             onClick={() => {
-              this.toggle();
+              this.handleAddNewUser();
             }}
           >
-            Save Changes
+            Add new
           </Button>{" "}
           <Button
             color="secondary"

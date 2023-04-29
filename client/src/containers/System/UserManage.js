@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import "./UserManage.scss";
-import { getAllUsers } from "../../services/userService";
+import { getAllUsers, deteleUserService } from "../../services/userService";
 import ModalUser from "./ModalUser";
 class UserManage extends Component {
   constructor(props) {
@@ -14,34 +14,45 @@ class UserManage extends Component {
   }
 
   async componentDidMount() {
+    await this.getAllUsersFromReact();
+  }
+  getAllUsersFromReact = async () => {
     let response = await getAllUsers("ALL");
     if (response && response.errCode === 0) {
       this.setState({
         arrUsers: response.users,
       });
     }
-  }
+  };
 
   handleAddNewUser = () => {
     this.setState({
-      isOpenModalUser: true
+      isOpenModalUser: true,
     });
+  };
 
-  }
+  handleDeleteUser = async (item) => {
+    try {
+      let res = await deteleUserService(item._id);
+      if (res && res.errCode === 0) {
+        await this.getAllUsersFromReact();
+      } else {
+        alert(res.errMessage);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
-  handleDeleteUser = () => {
-    alert("Delete me");
-  }
-
-  handleEditUser = () => {
-    alert("Change me")
-  }
+  handleEditUser = (item) => {
+    alert("Change me " + item);
+  };
 
   toggleFromParent = () => {
     this.setState({
-      isOpenModalUser: !this.state.isOpenModalUser
+      isOpenModalUser: !this.state.isOpenModalUser,
     });
-  }
+  };
 
   /** Life cycle
    *  Run component:
@@ -58,11 +69,16 @@ class UserManage extends Component {
       <div className="users-container">
         <ModalUser
           isOpen={this.state.isOpenModalUser}
-          toggleFromParent={() => { this.toggleFromParent() }}
+          toggleFromParent={() => {
+            this.toggleFromParent();
+          }}
         />
         <div className="title text-center">Manage users</div>
         <div className="mx-1">
-          <button className="btn btn-primary px-3" onClick={() => this.handleAddNewUser()}>
+          <button
+            className="btn btn-primary px-3"
+            onClick={() => this.handleAddNewUser()}
+          >
             <i className="fas fa-plus"></i> Add new users
           </button>
         </div>
@@ -86,10 +102,16 @@ class UserManage extends Component {
                       <td>{item.lastName}</td>
                       <td>{item.address}</td>
                       <td>
-                        <button className="btn-edit" onClick={() => this.handleEditUser()}>
+                        <button
+                          className="btn-edit"
+                          onClick={() => this.handleEditUser()}
+                        >
                           <i className="fas fa-pencil-alt"></i>
                         </button>
-                        <button className="btn-delete" onClick={() => this.handleDeleteUser()}>
+                        <button
+                          className="btn-delete"
+                          onClick={() => this.handleDeleteUser(item)}
+                        >
                           <i className="fas fa-trash"></i>
                         </button>
                       </td>

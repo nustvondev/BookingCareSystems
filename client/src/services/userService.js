@@ -5,6 +5,14 @@ const handleLoginApi = (email, password) => {
 };
 
 const getAllUsers = (inputValue) => {
-  return axios.get(`api/get-all-user?id=ALL`);
+  return axios.get(`api/get-all-user?id=${inputValue}`);
 };
-export { handleLoginApi, getAllUsers };
+
+const deteleUserService = (userId) => {
+  return axios.delete("/api/delete-user", {
+    data: {
+      id: userId,
+    },
+  });
+};
+export { handleLoginApi, getAllUsers, deteleUserService };

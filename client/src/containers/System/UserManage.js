@@ -119,7 +119,6 @@ class UserManage extends Component {
    */
   render() {
     let arrUsers = this.state.arrUsers;
-    console.log(arrUsers);
     //properties ; nested
     return (
       <div className="users-container">

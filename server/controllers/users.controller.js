@@ -127,16 +127,11 @@ const usersController = {
   },
   handleEditUser: async (req, res, next) => {
     const data = req.body;
-    if (!data.id ) {
+    if (!data.id) {
       return res
         .status(200)
         .json({ errCode: 2, errMessage: 'Missing parameters' });
     }
-    // if (data.password) {
-    //   return res
-    //     .status(200)
-    //     .json({ errCode: 2, errMessage: 'Can not update.' });
-    // }
     try {
       const userUpdate = await User.findById(data.id);
       if (userUpdate) {

@@ -74,7 +74,7 @@ class UserManage extends Component {
 
   handleDeleteUser = async (user) => {
     try {
-      let res = await deteleUserService(user.id);
+      let res = await deteleUserService(user._id);
       if (res && res.errCode === 0) {
         await this.getAllUsersFromReact();
       } else {
@@ -128,15 +128,14 @@ class UserManage extends Component {
           toggleFromParent={this.toggleUserModal}
           createNewuser={this.createNewuser}
         />
-        {
-          this.state.isOpenModalEditUser && (
-            <ModalEditUser
-              isOpen={this.state.isOpenModalEditUser}
-              toggleFromParent={this.toggleUserEditModal}
-              currentUser={this.state.userEdit}
-              editUser={this.doEditUser}
-            />
-          )}
+        {this.state.isOpenModalEditUser && (
+          <ModalEditUser
+            isOpen={this.state.isOpenModalEditUser}
+            toggleFromParent={this.toggleUserEditModal}
+            currentUser={this.state.userEdit}
+            editUser={this.doEditUser}
+          />
+        )}
         <div className="title text-center">Manage users with H2T</div>
         <div className="mx-1">
           <button

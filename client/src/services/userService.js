@@ -16,8 +16,12 @@ const deteleUserService = (userId) => {
   });
 };
 
+const editUserService = (inputData) => {
+  return axios.put('/api/edit-user', inputData);
+}
+
 const createNewUserService = (data) => {
   console.log('check data from service : ', data)
   return axios.post('/api/create-new-user', data)
 }
-export { handleLoginApi, getAllUsers, deteleUserService, createNewUserService };
+export { handleLoginApi, getAllUsers, deteleUserService, createNewUserService, editUserService};

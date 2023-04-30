@@ -9,7 +9,7 @@ import {
   editUserService,
 } from "../../services/userService";
 import ModalUser from "./ModalUser";
-//import ModalEditUser from "./ModalEditUser";
+import ModalEditUser from "./ModalEditUser";
 import { emitter } from "../../utils/emitter";
 
 class UserManage extends Component {
@@ -18,7 +18,7 @@ class UserManage extends Component {
     this.state = {
       arrUsers: [],
       isOpenModalUser: false,
-      // isOpenModalEditUser: false,
+      isOpenModalEditUser: false,
       userEdit: {},
     };
   }
@@ -48,11 +48,11 @@ class UserManage extends Component {
     });
   };
 
-  // toggleUserEditModal = () => {
-  //   this.setState({
-  //     isOpenModalEditUser: !this.state.isOpenModalEditUser,
-  //   });
-  // };
+  toggleUserEditModal = () => {
+    this.setState({
+      isOpenModalEditUser: !this.state.isOpenModalEditUser,
+    });
+  };
 
   createNewuser = async (data) => {
     try {
@@ -85,30 +85,30 @@ class UserManage extends Component {
     }
   };
 
-  // handleEditUser = (user) => {
-  //   console.log("check edit user ", user);
-  //   this.setState({
-  //     isOpenModalEditUser: true,
-  //     userEdit: user,
-  //   });
-  // };
+  handleEditUser = (user) => {
+    console.log("check edit user ", user);
+    this.setState({
+      isOpenModalEditUser: true,
+      userEdit: user,
+    });
+  };
 
-  // doEditUser = async (user) => {
-  //   try {
-  //     let res = await editUserService(user);
-  //     if (res && res.errCode === 0) {
-  //       this.setState({
-  //         isOpenModalEditUser: false,
-  //       });
+  doEditUser = async (user) => {
+    try {
+      let res = await editUserService(user);
+      if (res && res.errCode === 0) {
+        this.setState({
+          isOpenModalEditUser: false,
+        });
 
-  //       await this.getAllUsersFromReact();
-  //     } else {
-  //       alert(res.errCode);
-  //     }
-  //   } catch (e) {
-  //     console.log(e);
-  //   }
-  // };
+        await this.getAllUsersFromReact();
+      } else {
+        alert(res.errCode);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   /** Life cycle
    *  Run component:
@@ -128,14 +128,15 @@ class UserManage extends Component {
           toggleFromParent={this.toggleUserModal}
           createNewuser={this.createNewuser}
         />
-        {/* {this.state.isOpenModalEditUser && (
-          <ModalEditUser
-            isOpen={this.state.isOpenModalEditUser}
-            toggleFromParent={this.toggleUserEditModal}
-            currentUser={this.state.userEdit}
-            editUser={this.doEditUser}
-          />
-        )} */}
+        {
+          this.state.isOpenModalEditUser && (
+            <ModalEditUser
+              isOpen={this.state.isOpenModalEditUser}
+              toggleFromParent={this.toggleUserEditModal}
+              currentUser={this.state.userEdit}
+              editUser={this.doEditUser}
+            />
+          )}
         <div className="title text-center">Manage users with H2T</div>
         <div className="mx-1">
           <button

@@ -132,6 +132,7 @@ const usersController = {
         .status(200)
         .json({ errCode: 2, errMessage: 'Missing parameters' });
     }
+
     try {
       const userUpdate = await User.findById(data.id);
       if (userUpdate) {

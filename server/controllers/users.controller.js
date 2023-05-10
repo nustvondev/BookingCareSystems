@@ -1,4 +1,5 @@
 import User from '../models/user.model.js';
+import AllCode from '../models/allcode.model.js'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import createError from '../utils/createError.js';
@@ -177,6 +178,35 @@ const usersController = {
       next(createError(500, 'Some thing went wrong!'));
     }
   },
+
+  getAllCode: async (req, res, next) => {
+    let type = req.query.type;
+    let allCodes = [];
+    if (!type) {
+      return res.status(200).json({
+        errCode: 1,
+        errMessage: 'Missing parameters!',
+        allCodes,
+      });
+    }
+    try {
+      if (type === 'ALL') {
+        allCodes = await AllCode.find({});
+      } else if ((type && type !== 'ALL')) {
+        allCodes = await AllCode.find({ type: type });
+      }
+      return res.status(200).json({
+        errCode: 0,
+        errMessage: 'Find success',
+        allCodes,
+      })
+    } catch (error) {
+      console.log(error);
+      next(createError(500, 'Some thing went wrong!'));
+    }
+  },
 };
+
+
 
 export default usersController;

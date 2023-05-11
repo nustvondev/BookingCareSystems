@@ -1,5 +1,5 @@
 import actionTypes from "./actionTypes";
-import { getAllCodeService } from "../../services/userService";
+import { getAllCodeService, createNewUserService } from "../../services/userService";
 
 export const fetchGenderStart = () => {
   return async (dispatch, getState) => {
@@ -27,23 +27,7 @@ export const fetchGenderFailed = () => ({
   type: actionTypes.FETCH_GENDER_FAIDED,
 });
 
-export const fetchPositionSuccess = (positionData) => ({
-  type: actionTypes.FETCH_POSITION_SUCCESS,
-  data: positionData,
-});
 
-export const fetchPositionFailed = () => ({
-  type: actionTypes.FETCH_POSITION_FAIlDED,
-});
-
-export const fetchRoleSuccess = (roleData) => ({
-  type: actionTypes.FETCH_ROLE_SUCCESS,
-  data: roleData,
-});
-
-export const fetchRoleFailed = () => ({
-  type: actionTypes.FETCH_POSITION_FAIlDED,
-});
 
 export const fetchPositionStart = () => {
   return async (dispatch, getState) => {
@@ -61,6 +45,16 @@ export const fetchPositionStart = () => {
   };
 };
 
+export const fetchPositionSuccess = (positionData) => ({
+  type: actionTypes.FETCH_POSITION_SUCCESS,
+  data: positionData,
+});
+
+export const fetchPositionFailed = () => ({
+  type: actionTypes.FETCH_POSITION_FAIlDED,
+});
+
+
 export const fetchRoleStart = () => {
   return async (dispatch, getState) => {
     try {
@@ -76,3 +70,41 @@ export const fetchRoleStart = () => {
     }
   };
 };
+
+export const fetchRoleSuccess = (roleData) => ({
+  type: actionTypes.FETCH_ROLE_SUCCESS,
+  data: roleData,
+});
+
+export const fetchRoleFailed = () => ({
+  type: actionTypes.FETCH_POSITION_FAIlDED,
+});
+
+
+export const createNewUser = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      let res = await createNewUserService(data);
+      if (res && res.errCode === 0) {
+        dispatch(saveUserSuccess(res.data));
+      } else {
+        dispatch(saveUserFailed());
+      }
+    } catch (e) {
+      dispatch(saveUserFailed());
+      console.log("fetchRoleFailed error", e);
+    }
+  };
+};
+
+export const saveUserSuccess = (data) => ({
+  type: actionTypes.CREATE_USER_SUCCESS,
+  data: data,
+});
+
+export const saveUserFailed = () => ({
+  type: actionTypes.CREATE_USER_FAILED,
+  data: []
+});
+
+

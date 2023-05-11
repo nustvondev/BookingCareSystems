@@ -35,7 +35,7 @@ const UserSchema = new Schema(
     },
     roleId: {
       type: String,
-      default: '2',
+      // default: '2',
     },
     positionId: {
       type: String,

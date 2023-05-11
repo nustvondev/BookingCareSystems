@@ -3,6 +3,7 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { LANGUAGES, CRUD_ACTIONS, CommonUtils } from "../../../utils";
 import * as actions from "../../../store/actions";
+import "./UserRedux.scss"
 class UserRedux extends Component {
   constructor(props) {
     super(props);
@@ -81,6 +82,61 @@ class UserRedux extends Component {
       });
     }
   }
+
+  handleOnchangeImage = (event) => {
+    let data = event.target.files;
+    let file = data[0];
+    if (file) {
+      let objURL = URL.createObjectURL(file);
+      this.setState({
+        previewImgURL: objURL,
+        avatar: file
+      })
+    }
+  }
+
+  handleSaveUser = () => {
+    let isValid = this.checkValidateInput();
+    if (isValid === false) return;
+
+    this.props.createNewUser({
+      email: this.state.email,
+      password: this.state.password,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      phoneNumber: this.state.phoneNumber,
+      address: this.state.address,
+      gender: this.state.gender,
+      position: this.state.position,
+      role: this.state.role,
+      avatar: this.state.avatar,
+    });
+
+    alert("Create new user success");
+
+  }
+
+  checkValidateInput = () => {
+    let isValid = true;
+    let arrCheck = ['email', 'password', 'firstName', 'lastName', 'phoneNumber', 'address'];
+    for (let i = 0; i < arrCheck.length; i++) {
+      if (!this.state[arrCheck[i]]) {
+        isValid = false;
+        alert('Missing parameter : ' + arrCheck[i]);
+        break;
+      }
+    }
+    return isValid;
+  }
+
+  onChangeInput = (event, id) => {
+    let copyState = { ...this.state };
+    copyState[id] = event.target.value;
+    this.setState({
+      ...copyState
+    });
+  }
+
   render() {
     let genders = this.state.genderArr;
     let roles = this.state.roleArr;
@@ -274,7 +330,7 @@ class UserRedux extends Component {
                 </select>
               </div>
 
-              <div className="col-3">
+              <div className="col-3" >
                 <label>
                   <FormattedMessage id="manage-user.image" />
                 </label>
@@ -286,14 +342,14 @@ class UserRedux extends Component {
                     onChange={(event) => this.handleOnchangeImage(event)}
                   />
                   <label className="label-upload" htmlFor="previewImg">
-                    Tải ảnh <i className="fas fa-upload"></i>
+                    <FormattedMessage id="manage-user.add-image" /> <i className="fas fa-upload"></i>
                   </label>
                   <div
                     className="preview-image"
                     style={{
                       backgroundImage: `url(${this.state.previewImgURL})`,
                     }}
-                    onClick={() => this.openPreviewImage()}
+                  // onClick={() => this.openPreviewImage()}
                   ></div>
                 </div>
               </div>
@@ -344,6 +400,7 @@ const mapDispatchToProps = (dispatch) => {
     getGenderStart: () => dispatch(actions.fetchGenderStart()),
     getPositionStart: () => dispatch(actions.fetchPositionStart()),
     getRoleStart: () => dispatch(actions.fetchRoleStart()),
+    createNewUser: (data) => dispatch(actions.createNewUser(data))
   };
 };
 

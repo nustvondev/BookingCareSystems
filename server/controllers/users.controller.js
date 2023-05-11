@@ -73,7 +73,7 @@ const usersController = {
     if (!id) {
       return res.status(200).json({
         errCode: 1,
-        errMessage: 'Mising parameter.',
+        errMessage: 'Missing parameter.',
         users,
       });
     }

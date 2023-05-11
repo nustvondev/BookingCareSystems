@@ -21,7 +21,6 @@
     "child5": "Sức khỏe tinh thần",
     "child6": "Khám nha khoa"
   },
-
   "manage-user": {
     "add": "Thêm mới người dùng",
     "email": "Email",
@@ -35,7 +34,8 @@
     "role": "Vai trò",
     "image": "Ảnh đại diện",
     "save": "Lưu user",
-    "edit": "Lưu thay đổi"
+    "edit": "Lưu thay đổi",
+    "add-image": "Tải ảnh"
   },
   "homepage": {
     "outstanding-doctor": "Bác sĩ nổi bật tuần qua",

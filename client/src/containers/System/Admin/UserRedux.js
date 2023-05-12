@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { LANGUAGES, CRUD_ACTIONS, CommonUtils } from "../../../utils";
 import * as actions from "../../../store/actions";
 import "./UserRedux.scss"
+import TableManageUser from "./TableManageUser";
 class UserRedux extends Component {
   constructor(props) {
     super(props);
@@ -41,14 +42,14 @@ class UserRedux extends Component {
       let arrGenders = this.props.genderRedux;
       this.setState({
         genderArr: arrGenders,
-        gender: arrGenders && arrGenders.length > 0 ? arrGenders[0].keyMap : "",
+        gender: arrGenders && arrGenders.length > 0 ? arrGenders[0].key : "",
       });
     }
     if (prevProps.roleRedux !== this.props.roleRedux) {
       let arrRoles = this.props.roleRedux;
       this.setState({
         roleArr: arrRoles,
-        role: arrRoles && arrRoles.length > 0 ? arrRoles[0].keyMap : "",
+        role: arrRoles && arrRoles.length > 0 ? arrRoles[0].key : "",
       });
     }
     if (prevProps.positionRedux !== this.props.positionRedux) {
@@ -56,7 +57,7 @@ class UserRedux extends Component {
       this.setState({
         positionArr: arrPositions,
         position:
-          arrPositions && arrPositions.length > 0 ? arrPositions[0].keyMap : "",
+          arrPositions && arrPositions.length > 0 ? arrPositions[0].key : "",
       });
     }
 
@@ -72,10 +73,10 @@ class UserRedux extends Component {
         lastName: "",
         phoneNumber: "",
         address: "",
-        gender: arrGenders && arrGenders.length > 0 ? arrGenders[0].keyMap : "",
-        role: arrRoles && arrRoles.length > 0 ? arrRoles[0].keyMap : "",
+        gender: arrGenders && arrGenders.length > 0 ? arrGenders[0].key : "",
+        role: arrRoles && arrRoles.length > 0 ? arrRoles[0].key : "",
         position:
-          arrPositions && arrPositions.length > 0 ? arrPositions[0].keyMap : "",
+          arrPositions && arrPositions.length > 0 ? arrPositions[0].key : "",
         avatar: "",
         action: CRUD_ACTIONS.CREATE,
         previewImgURL: "",
@@ -107,12 +108,11 @@ class UserRedux extends Component {
       phoneNumber: this.state.phoneNumber,
       address: this.state.address,
       gender: this.state.gender,
-      position: this.state.position,
-      role: this.state.role,
+      positionId: this.state.position,
+      roleId: this.state.role,
       avatar: this.state.avatar,
     });
-
-    alert("Create new user success");
+    this.props.fetchUserRedux();
 
   }
 
@@ -270,7 +270,7 @@ class UserRedux extends Component {
                     genders.length > 0 &&
                     genders.map((item, index) => {
                       return (
-                        <option key={index} value={item.keyMap}>
+                        <option key={index} value={item.key}>
                           {language === LANGUAGES.VI
                             ? item.valueVi
                             : item.valueEn}
@@ -295,7 +295,7 @@ class UserRedux extends Component {
                     positions.length > 0 &&
                     positions.map((item, index) => {
                       return (
-                        <option key={index} value={item.keyMap}>
+                        <option key={index} value={item.key}>
                           {language === LANGUAGES.VI
                             ? item.valueVi
                             : item.valueEn}
@@ -320,7 +320,7 @@ class UserRedux extends Component {
                     roles.length > 0 &&
                     roles.map((item, index) => {
                       return (
-                        <option key={index} value={item.keyMap}>
+                        <option key={index} value={item.key}>
                           {language === LANGUAGES.VI
                             ? item.valueVi
                             : item.valueEn}
@@ -369,7 +369,11 @@ class UserRedux extends Component {
                   )}
                 </button>
               </div>
-
+              <div className="col-12 my-3">
+                <div className="col-12">
+                  <TableManageUser />
+                </div>
+              </div>
               <div className="col-12 mb-5">
                 {/* Task của bài sau đừng xóa nghen đm <TableManageUser
                   handleEditUserFromParentKey={this.handleEditUserFromParent}
@@ -400,7 +404,8 @@ const mapDispatchToProps = (dispatch) => {
     getGenderStart: () => dispatch(actions.fetchGenderStart()),
     getPositionStart: () => dispatch(actions.fetchPositionStart()),
     getRoleStart: () => dispatch(actions.fetchRoleStart()),
-    createNewUser: (data) => dispatch(actions.createNewUser(data))
+    createNewUser: (data) => dispatch(actions.createNewUser(data)),
+    fetchUserRedux: () => dispatch(actions.fetchAllUserStart()),
   };
 };
 

@@ -1,5 +1,11 @@
 import actionTypes from "./actionTypes";
-import { getAllCodeService, createNewUserService, getAllUsers, deteleUserService } from "../../services/userService";
+import {
+  getAllCodeService,
+  createNewUserService,
+  getAllUsers,
+  deteleUserService,
+  editUserService,
+} from "../../services/userService";
 import { toast } from "react-toastify";
 
 export const fetchGenderStart = () => {
@@ -96,7 +102,7 @@ export const createNewUser = (data) => {
       }
     } catch (e) {
       dispatch(saveUserFailed());
-      console.log("fetchRoleFailed error", e);
+      console.log("create a user error", e);
     }
   };
 };
@@ -120,7 +126,7 @@ export const fetchAllUserStart = () => {
       }
     } catch (e) {
       dispatch(fetchUserFailed());
-      console.log("fetchRoleFailed error", e);
+      console.log("fetch all user error", e);
     }
   }
 };
@@ -137,7 +143,7 @@ export const fetchUserFailed = () => ({
 export const deleteAUser = (userId) => {
   return async (dispatch, getState) => {
     try {
-      let res = await deteleUserService(userId);
+      let res = await editUserService(userId);
       if (res && res.errCode === 0) {
         toast.success("Delete A User Success");
         dispatch(deleteUserSuccess());
@@ -148,7 +154,7 @@ export const deleteAUser = (userId) => {
       }
     } catch (e) {
       dispatch(deleteUserFailed());
-      console.log("fetchRoleFailed error", e);
+      console.log("delete error", e);
     }
   };
 };
@@ -159,5 +165,34 @@ export const deleteUserSuccess = () => ({
 
 export const deleteUserFailed = () => ({
   type: actionTypes.DELETE_USER_FAILED,
+});
+
+
+export const editAUser = (data) => {
+  return async (dispatch, getState) => {
+    try {
+      let res = await editUserService(data);
+      if (res && res.errCode === 0) {
+        toast.success("Edit A User Success");
+        dispatch(editUserSuccess());
+        dispatch(fetchAllUserStart());
+      } else {
+        toast.error("Edit A User Failed");
+        dispatch(editUserFailed());
+      }
+    } catch (e) {
+      dispatch(editUserFailed());
+      toast.error("Edit A User Failed");
+      console.log("edit error", e);
+    }
+  };
+};
+
+export const editUserSuccess = () => ({
+  type: actionTypes.EDIT_USER_SUCCESS
+});
+
+export const editUserFailed = () => ({
+  type: actionTypes.EDIT_USER_FAILED
 });
 

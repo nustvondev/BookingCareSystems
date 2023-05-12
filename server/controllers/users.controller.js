@@ -132,14 +132,17 @@ const usersController = {
         .status(200)
         .json({ errCode: 2, errMessage: 'Missing parameters' });
     }
-
     try {
       const userUpdate = await User.findById(data.id);
       if (userUpdate) {
-        userUpdate.email = data.email;
         userUpdate.firstName = data.firstName;
         userUpdate.lastName = data.lastName;
         userUpdate.address = data.address;
+        userUpdate.roleId = data.roleId;
+        userUpdate.positionId = data.positionId;
+        userUpdate.gender = data.gender;
+        userUpdate.phonenumber = data.phonenumber;
+        // userUpdate.image = data.image;
         await userUpdate.save();
         res.status(200).json({
           errCode: 0,

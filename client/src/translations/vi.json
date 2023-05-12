@@ -35,7 +35,8 @@
     "image": "Ảnh đại diện",
     "save": "Lưu user",
     "edit": "Lưu thay đổi",
-    "add-image": "Tải ảnh"
+    "add-image": "Tải ảnh",
+    "cancel": "Hủy thay đổi"
   },
   "homepage": {
     "outstanding-doctor": "Bác sĩ nổi bật tuần qua",

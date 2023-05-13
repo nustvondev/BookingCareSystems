@@ -20,6 +20,10 @@ const deteleUserService = (userId) => {
   });
 };
 
+const getTopDoctorHomeService = (limit) => {
+  return axios.get(`/api/top-doctor-home?limit=${limit}`)
+}
+
 const editUserService = (inputData) => {
   return axios.put('/api/edit-user', inputData);
 }
@@ -27,4 +31,4 @@ const editUserService = (inputData) => {
 const createNewUserService = (data) => {
   return axios.post('/api/create-new-user', data)
 }
-export { handleLoginApi, getAllUsers, deteleUserService, createNewUserService, editUserService, getAllCodeService };
+export { handleLoginApi, getAllUsers, deteleUserService, createNewUserService, editUserService, getAllCodeService, getTopDoctorHomeService };

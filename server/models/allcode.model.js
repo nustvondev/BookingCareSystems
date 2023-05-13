@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const AllcodeSchema = new Schema(
   {
-    key: {
+    keyMap: {
       type: String,
       require: true,
       unique: true,

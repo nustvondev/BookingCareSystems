@@ -11,7 +11,6 @@ const doctorController = {
                 obj.genderData = await Allcode.find({ keyMap: obj.gender }).select('valueEn valueVi -_id');
                 obj.positionData = positionData;
             }));
-            console.log(response)
             return res.status(200).json(response);
         } catch (e) {
             console.log(e);

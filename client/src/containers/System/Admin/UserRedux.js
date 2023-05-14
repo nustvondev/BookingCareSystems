@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import { LANGUAGES, CRUD_ACTIONS, CommonUtils } from "../../../utils";
+import { LANGUAGES, CRUD_ACTIONS, CommonUtils, upload } from "../../../utils";
 import * as actions from "../../../store/actions";
 import "./UserRedux.scss"
 import TableManageUser from "./TableManageUser";
@@ -28,6 +28,8 @@ class UserRedux extends Component {
 
       action: "",
       userEditId: "",
+      uploading: false,
+      fileImage: null
     };
   }
 
@@ -84,18 +86,26 @@ class UserRedux extends Component {
     }
   }
 
-  handleOnchangeImage = (event) => {
-    let data = event.target.files;
-    let file = data[0];
-    if (file) {
-      let objURL = URL.createObjectURL(file);
-      this.setState({
-        previewImgURL: objURL,
-        avatar: file
-      })
-    }
-  }
+  // handleOnchangeImage = (event) => {
+  //   let data = event.target.files;
+  //   let file = data[0];
+  //   if (file) {
+  //     let objURL = URL.createObjectURL(file);
+  //     this.setState({
+  //       previewImgURL: objURL,
+  //       avatar: file
+  //     })
+  //   }
+  // }
 
+  handleUpload=async()=>{
+    this.setState({uploading:true});
+    const urlImage= await upload(this.state.fileImage);
+    console.log(urlImage);
+    this.setState({avatar:urlImage});
+    this.setState({uploading:false});
+
+  }
   handleSaveUser = () => {
     let isValid = this.checkValidateInput();
     if (isValid === false) return;
@@ -390,11 +400,14 @@ class UserRedux extends Component {
                     id="previewImg"
                     type="file"
                     hidden
-                    onChange={(event) => this.handleOnchangeImage(event)}
+                    onChange={(event) => this.setState({fileImage: event.target.files[0]})}
                   />
                   <label className="label-upload" htmlFor="previewImg">
                     <FormattedMessage id="manage-user.add-image" /> <i className="fas fa-upload"></i>
                   </label>
+                  <button onClick={this.handleUpload}>
+                {this.state.uploading ? "uploading" : "Upload"}
+              </button>
                   <div
                     className="preview-image"
                     style={{

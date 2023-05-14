@@ -21,19 +21,20 @@ class Header extends Component {
     if (userInfo && !_.isEmpty(userInfo)) {
       console.log(userInfo.roleId);
       let role = userInfo.roleId;
-      switch (userInfo.roleId) {
-        case "1":
-          role = "R1";
-          break;
-        case "2":
-          role = "R2";
-          break;
-        case "3":
-          role = "R3";
-          break;
-        default:
-          role = null;
-      }
+      //fix string "1" to "R1"
+      // switch (userInfo.roleId) {
+      //   case "1":
+      //     role = "R1";
+      //     break;
+      //   case "2":
+      //     role = "R2";
+      //     break;
+      //   case "3":
+      //     role = "R3";
+      //     break;
+      //   default:
+      //     role = null;
+      // }
       if (role === USER_ROLE.ADMIN) {
         menu = adminMenu;
       }

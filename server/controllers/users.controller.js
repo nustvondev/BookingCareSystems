@@ -114,6 +114,7 @@ const usersController = {
       const hash = bcrypt.hashSync(req.body.password, 5);
       const newUser = new User({
         ...req.body,
+        image:req.body.avatar,
         password: hash,
       });
       await newUser.save();
@@ -136,6 +137,7 @@ const usersController = {
       const userUpdate = await User.findById(data.id);
       if (userUpdate) {
         userUpdate.firstName = data.firstName;
+        userUpdate.image = data.avatar;
         userUpdate.lastName = data.lastName;
         userUpdate.address = data.address;
         userUpdate.roleId = data.roleId;

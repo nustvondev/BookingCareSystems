@@ -141,9 +141,10 @@ export const fetchUserFailed = () => ({
 });
 
 export const deleteAUser = (userId) => {
+  // console.log(userId)
   return async (dispatch, getState) => {
     try {
-      let res = await editUserService(userId);
+      let res = await deteleUserService(userId);
       if (res && res.errCode === 0) {
         toast.success("Delete A User Success");
         dispatch(deleteUserSuccess());

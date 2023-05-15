@@ -28,18 +28,25 @@ const UserSchema = new Schema(
       require: true,
     },
     gender: {
-      type: Boolean,
+      type: String,
+      default: 'O',
+    },
+    genderData:{        
+      type: Object,
     },
     image: {
       type: String,
     },
     roleId: {
       type: String,
-      default: '2',
+      default: 'R2',
     },
     positionId: {
       type: String,
     },
+    positionData:{        //Do tự thêm ở ngoài vào hoài nó ko cho nhưng khi bỏ vô đây r thêm nó lại cho
+      type: Object,
+    }
   },
   {
     timestamps: true,

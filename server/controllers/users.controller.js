@@ -73,7 +73,7 @@ const usersController = {
     if (!id) {
       return res.status(200).json({
         errCode: 1,
-        errMessage: 'Mising parameter.',
+        errMessage: 'Missing parameter.',
         users,
       });
     }
@@ -114,6 +114,7 @@ const usersController = {
       const hash = bcrypt.hashSync(req.body.password, 5);
       const newUser = new User({
         ...req.body,
+        image:req.body.avatar,
         password: hash,
       });
       await newUser.save();
@@ -132,14 +133,18 @@ const usersController = {
         .status(200)
         .json({ errCode: 2, errMessage: 'Missing parameters' });
     }
-
     try {
       const userUpdate = await User.findById(data.id);
       if (userUpdate) {
-        userUpdate.email = data.email;
         userUpdate.firstName = data.firstName;
+        userUpdate.image = data.avatar;
         userUpdate.lastName = data.lastName;
         userUpdate.address = data.address;
+        userUpdate.roleId = data.roleId;
+        userUpdate.positionId = data.positionId;
+        userUpdate.gender = data.gender;
+        userUpdate.phonenumber = data.phonenumber;
+        // userUpdate.image = data.image;
         await userUpdate.save();
         res.status(200).json({
           errCode: 0,

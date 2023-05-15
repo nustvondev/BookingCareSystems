@@ -6,7 +6,7 @@ import logo from "../../assets/images/logologin.png";
 import * as actions from "../../store/actions";
 import { handleLoginApi } from "../../services/userService";
 import "./Login.scss";
-import ToastUtil from "../../utils/ToastUtil";
+import { ToastUtil } from "../../utils";
 
 class Login extends Component {
   constructor(props) {

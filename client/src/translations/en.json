@@ -34,7 +34,9 @@
     "role": "Role",
     "image": "Avatar",
     "save": "Save user",
-    "edit": "Edit user"
+    "edit": "Edit user",
+    "add-image": "Load image",
+    "cancel": "Cancel"
   },
   "homepage": {
     "outstanding-doctor": "Last week's featured doctor",

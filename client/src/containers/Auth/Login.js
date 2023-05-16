@@ -62,6 +62,12 @@ class Login extends Component {
       }
     }
   };
+  handleKeyDown = (event) => {
+    if (event.key === "Enter" || event.keyCode === 13) {
+      this.handleLogin();
+    }
+  };
+
   render() {
     return (
       <div className="logins-containers">
@@ -96,6 +102,7 @@ class Login extends Component {
                     onChange={(e) => {
                       this.setState({ password: e.target.value });
                     }}
+                    onKeyDown={(event) => this.handleKeyDown(event)}
                   />
                   <div className="remember-form">
                     <input type="checkbox" />

@@ -91,7 +91,7 @@ const doctorController = {
         Markdown: markdownId,
         positionData: positionData,
       };
-      console.log(userWithMarkdown);
+      // console.log(userWithMarkdown);
       result = {
         errCode: 0,
         data: userWithMarkdown,

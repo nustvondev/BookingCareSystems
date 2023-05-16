@@ -71,10 +71,10 @@ class DetailDoctor extends Component {
           <div className="detail-infor-doctor">
             {detailDoctor &&
               detailDoctor.Markdown &&
-              detailDoctor.Markdown.contentHTML && (
+              detailDoctor.Markdown.contentHtml && (
                 <div
                   dangerouslySetInnerHTML={{
-                    __html: detailDoctor.Markdown.contentHTML,
+                    __html: detailDoctor.Markdown.contentHtml,
                   }}
                 ></div>
               )}

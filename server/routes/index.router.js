@@ -2,7 +2,7 @@ import express from 'express';
 import authRoute from './auth.route.js';
 import userRouter from './user.route.js';
 import allCodeRouter from './allcode.route.js';
-import doctorRouter from './topdoctor.router.js';
+import doctorRouter from './doctor.router.js';
 let router = express.Router();
 
 export let initWebRouters = (app) => {

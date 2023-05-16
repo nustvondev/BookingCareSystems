@@ -10,7 +10,7 @@ const getAllUsers = (inputValue) => {
 
 const getAllCodeService = (inputType) => {
   return axios.get(`/api/allcode?type=${inputType}`);
-}
+};
 
 const deteleUserService = (userId) => {
   return axios.delete("/api/delete-user", {
@@ -21,14 +21,35 @@ const deteleUserService = (userId) => {
 };
 
 const getTopDoctorHomeService = (limit) => {
-  return axios.get(`/api/top-doctor-home?limit=${limit}`)
-}
+  return axios.get(`/api/top-doctor-home?limit=${limit}`);
+};
 
 const editUserService = (inputData) => {
-  return axios.put('/api/edit-user', inputData);
-}
+  return axios.put("/api/edit-user", inputData);
+};
 
 const createNewUserService = (data) => {
-  return axios.post('/api/create-new-user', data)
-}
-export { handleLoginApi, getAllUsers, deteleUserService, createNewUserService, editUserService, getAllCodeService, getTopDoctorHomeService };
+  return axios.post("/api/create-new-user", data);
+};
+const getAllDoctors = () => {
+  return axios.get(`/api/get-all-doctors`);
+};
+
+const getDetailInforDoctor = (inputId) => {
+  return axios.get(`/api/get-detail-doctor-by-id?id=${inputId}`);
+};
+const saveDetailDoctorService = (data) => {
+  return axios.post("/api/save-infor-doctors", data);
+};
+export {
+  handleLoginApi,
+  getAllUsers,
+  deteleUserService,
+  createNewUserService,
+  editUserService,
+  getAllCodeService,
+  getTopDoctorHomeService,
+  getDetailInforDoctor,
+  getAllDoctors,
+  saveDetailDoctorService,
+};

@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import { initWebRouters } from './routes/index.router.js';
 import { configViewEngine } from './config/viewEngine.js';
 import { setMiddleWare } from './middleware/middleware.js';
-import {migration} from "./config/migration.js";
+import { migration } from './config/migration.js';
 const app = express();
 dotenv.config();
 
@@ -27,8 +27,8 @@ app.use((err, req, res, next) => {
   return res.status(errorStatus).send(errObject);
 });
 
-app.listen(process.env.BACKEND_PORT || 8080, () => {
-  connect();
+app.listen(process.env.BACKEND_PORT || 8080, async () => {
+  await connect();
   console.log('backend is running http://localhost:8080/');
   migration();
 });

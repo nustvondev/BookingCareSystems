@@ -3,6 +3,9 @@ import Allcode from '../models/allcode.model.js';
 import createError from '../utils/createError.js';
 import Markdown from '../models/markdown.model.js';
 import scheduleModel from '../models/schedule.model.js';
+import dotenv from 'dotenv';
+dotenv.config();
+const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
 const doctorController = {
   getTopDoctorHome: async (req, res) => {
@@ -109,13 +112,48 @@ const doctorController = {
     let inputData = req.body;
     console.log(inputData);
     try {
-      if (!inputData) {
+      if (!inputData.arrSchedule) {
         result = { errCode: 1, errMessage: 'Missing required parameter!' };
       } else {
-        await scheduleModel.insertMany(inputData);
+        inputData.arrSchedule.map((item) => {
+          item.maxNumber = MAX_NUMBER_SCHEDULE;
+          return item;
+        });
+        const data = inputData.arrSchedule;
+        /**
+         * data chứa các bản ghi cần thêm vào cơ sở dữ liệu
+         * Đối với mỗi bản ghi, chúng ta tạo một filter dựa trên các trường date, timeType và doctorId
+         * những trường dùng để xác định xem bản ghi đã tồn tại trong cơ sở dữ liệu
+         * tạo một update object bằng cách sử dụng toàn bộ dữ liệu của bản ghi trong scheduleData
+         * sử dụng phương thức findOneAndUpdate() của mô hình ScheduleModel  để tìm kiếm và cập nhật bản
+         * ghi dựa trên filter và update. Các tùy chọn upsert và new được đặt thành true. Tùy chọn upsert sẽ
+         * tạo một bản ghi mới nếu không tìm thấy bản ghi nào khớp với filter, và tùy chọn new sẽ trả về
+         * bản ghi đã được cập nhật
+         */
+
+        data.forEach(async (scheduleData) => {
+          const filter = {
+            date: scheduleData.date,
+            timeType: scheduleData.timeType,
+            doctorId: scheduleData.doctorId,
+          };
+
+          const update = {
+            ...scheduleData,
+          };
+
+          const options = {
+            upsert: true, // Create a new document if it doesn't exist
+            new: true, // Return the updated document
+          };
+
+          await scheduleModel.findOneAndUpdate(filter, update, options);
+        });
+        // console.log(inputData);
+        // await scheduleModel.insertMany(inputData.arrSchedule);
         result = {
           errCode: 0,
-          data: inputData
+          data: inputData.arrSchedule,
         };
       }
     } catch (error) {
@@ -124,8 +162,9 @@ const doctorController = {
     }
     return res.status(200).json(result);
   },
-
+  getScheduleByDate: async (req, res) => {
+    return;
+  },
 };
-
 
 export default doctorController;

@@ -67,7 +67,6 @@ class OutStandingDoctor extends Component {
                   }
                   let nameVi = `${item.positionData[0].valueVi}, ${item.lastName} ${item.firstName} `;
                   let nameEn = `${item.positionData[0].valueEn}, ${item.firstName} ${item.lastName}`;
-                  console.log(item);
                   return (
                     <div
                       className="section-customize"

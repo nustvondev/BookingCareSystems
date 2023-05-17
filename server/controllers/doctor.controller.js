@@ -2,6 +2,8 @@ import User from '../models/user.model.js';
 import Allcode from '../models/allcode.model.js';
 import createError from '../utils/createError.js';
 import Markdown from '../models/markdown.model.js';
+import scheduleModel from '../models/schedule.model.js';
+
 const doctorController = {
   getTopDoctorHome: async (req, res) => {
     let limit = req.query.limit;
@@ -101,6 +103,29 @@ const doctorController = {
     }
     return res.status(200).json(result);
   },
+
+  bulkCreateSchedule: async (req, res) => {
+    let result = {};
+    let inputData = req.body;
+    console.log(inputData);
+    try {
+      if (!inputData) {
+        result = { errCode: 1, errMessage: 'Missing required parameter!' };
+      } else {
+        await scheduleModel.insertMany(inputData);
+        result = {
+          errCode: 0,
+          data: inputData
+        };
+      }
+    } catch (error) {
+      result = { errCode: 1, errMessage: 'Server error' };
+      console.log(error.message);
+    }
+    return res.status(200).json(result);
+  },
+
 };
+
 
 export default doctorController;

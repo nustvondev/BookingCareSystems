@@ -10,6 +10,7 @@ const ScheduleSchema = new Schema(
     maxNumber: {
       type: Number,
       require: true,
+      default: 10
     },
     date: {
       type: Date,

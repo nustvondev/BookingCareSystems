@@ -3,7 +3,7 @@ import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
 import { LANGUAGES, CRUD_ACTIONS, CommonUtils, upload } from "../../../utils";
 import * as actions from "../../../store/actions";
-import "./UserRedux.scss"
+import "./UserRedux.scss";
 import TableManageUser from "./TableManageUser";
 class UserRedux extends Component {
   constructor(props) {
@@ -29,7 +29,7 @@ class UserRedux extends Component {
       action: "",
       userEditId: "",
       uploading: false,
-      fileImage: null
+      fileImage: null,
     };
   }
 
@@ -98,14 +98,14 @@ class UserRedux extends Component {
   //   }
   // }
 
-  handleUpload=async()=>{
-    this.setState({uploading:true});
-    const urlImage= await upload(this.state.fileImage);
+  handleUpload = async () => {
+    this.setState({ uploading: true });
+    const urlImage = await upload(this.state.fileImage);
     console.log(urlImage);
-    this.setState({avatar:urlImage});
-    this.setState({uploading:false});
-
-  }
+    this.setState({ avatar: urlImage });
+    this.setState({ uploading: false });
+    this.setState({ previewImgURL: urlImage });
+  };
   handleSaveUser = () => {
     let isValid = this.checkValidateInput();
     if (isValid === false) return;
@@ -141,29 +141,35 @@ class UserRedux extends Component {
     }
 
     this.props.fetchUserRedux();
-
-  }
+  };
 
   checkValidateInput = () => {
     let isValid = true;
-    let arrCheck = ['email', 'password', 'firstName', 'lastName', 'phonenumber', 'address'];
+    let arrCheck = [
+      "email",
+      "password",
+      "firstName",
+      "lastName",
+      "phonenumber",
+      "address",
+    ];
     for (let i = 0; i < arrCheck.length; i++) {
       if (!this.state[arrCheck[i]]) {
         isValid = false;
-        alert('Missing parameter : ' + arrCheck[i]);
+        alert("Missing parameter : " + arrCheck[i]);
         break;
       }
     }
     return isValid;
-  }
+  };
 
   onChangeInput = (event, id) => {
     let copyState = { ...this.state };
     copyState[id] = event.target.value;
     this.setState({
-      ...copyState
+      ...copyState,
     });
-  }
+  };
 
   handleEditUserFromParent = (user) => {
     this.setState({
@@ -180,9 +186,8 @@ class UserRedux extends Component {
       avatar: "",
       action: CRUD_ACTIONS.EDIT,
       previewImgURL: "",
-
     });
-  }
+  };
 
   handleCancel = () => {
     this.setState({
@@ -196,7 +201,7 @@ class UserRedux extends Component {
       action: CRUD_ACTIONS.CREATE,
       previewImgURL: "",
     });
-  }
+  };
 
   render() {
     let genders = this.state.genderArr;
@@ -391,7 +396,7 @@ class UserRedux extends Component {
                 </select>
               </div>
 
-              <div className="col-3" >
+              <div className="col-3">
                 <label>
                   <FormattedMessage id="manage-user.image" />
                 </label>
@@ -400,20 +405,23 @@ class UserRedux extends Component {
                     id="previewImg"
                     type="file"
                     hidden
-                    onChange={(event) => this.setState({fileImage: event.target.files[0]})}
+                    onChange={(event) =>
+                      this.setState({ fileImage: event.target.files[0] })
+                    }
                   />
                   <label className="label-upload" htmlFor="previewImg">
-                    <FormattedMessage id="manage-user.add-image" /> <i className="fas fa-upload"></i>
+                    <FormattedMessage id="manage-user.add-image" />{" "}
+                    <i className="fas fa-upload"></i>
                   </label>
                   <button onClick={this.handleUpload}>
-                {this.state.uploading ? "uploading" : "Upload"}
-              </button>
+                    {this.state.uploading ? "uploading" : "Upload"}
+                  </button>
                   <div
                     className="preview-image"
                     style={{
                       backgroundImage: `url(${this.state.previewImgURL})`,
                     }}
-                  // onClick={() => this.openPreviewImage()}
+                    // onClick={() => this.openPreviewImage()}
                   ></div>
                 </div>
               </div>
@@ -432,7 +440,17 @@ class UserRedux extends Component {
                     <FormattedMessage id="manage-user.save" />
                   )}
                 </button>
-                {this.state.action === CRUD_ACTIONS.EDIT ? (<button onClick={() => this.handleCancel()} className="btn btn-primary" style={{ marginLeft: "10px" }}><FormattedMessage id="manage-user.cancel" /></button>) : ("")}
+                {this.state.action === CRUD_ACTIONS.EDIT ? (
+                  <button
+                    onClick={() => this.handleCancel()}
+                    className="btn btn-primary"
+                    style={{ marginLeft: "10px" }}
+                  >
+                    <FormattedMessage id="manage-user.cancel" />
+                  </button>
+                ) : (
+                  ""
+                )}
               </div>
               <div className="col-12 my-3">
                 <div className="col-12">

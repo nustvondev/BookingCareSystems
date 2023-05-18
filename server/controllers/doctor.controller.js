@@ -163,7 +163,28 @@ const doctorController = {
     return res.status(200).json(result);
   },
   getScheduleByDate: async (req, res) => {
-    return;
+    console.log(req.query.doctorId);
+    console.log(req.query.date);
+    let result = {};
+
+    try {
+      const data = await scheduleModel.find({
+        doctorId: req.query.doctorId,
+        date: req.query.date,
+      });
+      if (data.length > 0) {
+        result = {
+          errCode: 0,
+          data: data,
+        };
+      } else {
+        result = { errCode: 1, errMessage: 'No data' };
+      }
+    } catch (error) {
+      result = { errCode: 1, errMessage: 'Server error' };
+      console.log(error.message);
+    }
+    return res.status(200).json(result);
   },
 };
 

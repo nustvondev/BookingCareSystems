@@ -5,6 +5,7 @@ import moment from "moment";
 import localization from "moment/locale/vi";
 import { LANGUAGES } from "../../../utils";
 import { getScheduleDoctorByDate } from "../../../services/userService";
+import { toast } from "react-toastify";
 
 class DoctorSchedule extends Component {
   constructor(props) {
@@ -56,11 +57,15 @@ class DoctorSchedule extends Component {
     if (this.props.doctorIdFromParent && this.props.doctorIdFromParent !== -1) {
       let doctorId = this.props.doctorIdFromParent;
       let date = event.target.value;
-      let formatedDate = new Date(date).getTime();
       console.log(date, doctorId);
-      let res = await getScheduleDoctorByDate(doctorId, formatedDate);
+      let res = await getScheduleDoctorByDate(doctorId, date);
 
       console.log("check res schedule from react: ", res);
+      if (res.errCode === 0) {
+        toast.success("fetch data sucess");
+      } else {
+        toast.warn("No data fetch!");
+      }
     }
   };
 

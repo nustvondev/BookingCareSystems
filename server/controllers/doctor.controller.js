@@ -172,6 +172,12 @@ const doctorController = {
         doctorId: req.query.doctorId,
         date: req.query.date,
       });
+      await Promise.all(
+        data.map(async (obj) => {
+          obj.timeTypeData = await Allcode.find({ keyMap: obj.timeType}).select(
+            'valueEn valueVi'
+          );
+        }))
       if (data.length > 0) {
         result = {
           errCode: 0,

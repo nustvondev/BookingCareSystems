@@ -24,6 +24,9 @@ const ScheduleSchema = new Schema(
       type: String,
       require: true,
     },
+    timeTypeData: {
+      type: Object,
+    },
   },
   {
     timestamps: true,

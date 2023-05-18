@@ -4,6 +4,7 @@ import createError from '../utils/createError.js';
 import Markdown from '../models/markdown.model.js';
 import scheduleModel from '../models/schedule.model.js';
 import dotenv from 'dotenv';
+import allcodeModel from '../models/allcode.model.js';
 dotenv.config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
@@ -163,21 +164,59 @@ const doctorController = {
     return res.status(200).json(result);
   },
   getScheduleByDate: async (req, res) => {
-    console.log(req.query.doctorId);
-    console.log(req.query.date);
+    // console.log(req.query.doctorId);
+    // console.log(req.query.date);
     let result = {};
 
     try {
-      const data = await scheduleModel.find({
+      /**
+       * Todo:
+       * - Lấy toàn bộ dữ liệu allcode kiểu TIME
+       * - Tạo object allcodekeymap
+       * - Thêm trường timeTypeData vào mỗi phần tử của mảng schedule
+       * * ví dụ:
+       * {
+       *     T4: { valueEn: '11:00 AM - 0:00 PM', valueVi: '11:00 - 12:00' },
+       *     T2: { valueEn: '9:00 AM - 10:00 AM', valueVi: '9:00 - 10:00' },
+       *     T5: { valueEn: '1:00 PM - 2:00 PM', valueVi: '13:00 - 14:00' },
+       *     ...
+       * }
+       * {
+       *     _id: new ObjectId("6465d581fe671a8eb29010a3"),
+       *     date: 2023-05-20T17:00:00.000Z,
+       *     doctorId: '6465cfb1d628bae812ebefcf',
+       *     timeTypeData: { valueEn: '2:00 PM - 3:00 PM', valueVi: '14:00 - 15:00' }
+       *     ...
+       * }
+       */
+
+      const timeType = await allcodeModel
+        .find({ type: 'TIME' })
+        .select('keyMap valueEn valueVi -_id');
+      const allcodeMap = {};
+      timeType.forEach((code) => {
+        allcodeMap[code.keyMap] = {
+          valueEn: code.valueEn,
+          valueVi: code.valueVi,
+        };
+      });
+      let data = await scheduleModel.find({
         doctorId: req.query.doctorId,
         date: req.query.date,
       });
-      await Promise.all(
-        data.map(async (obj) => {
-          obj.timeTypeData = await Allcode.find({ keyMap: obj.timeType}).select(
-            'valueEn valueVi'
-          );
-        }))
+      data.forEach((item) => {
+        const timeType = item.timeType;
+        if (allcodeMap.hasOwnProperty(timeType)) {
+          item.timeTypeData = allcodeMap[timeType];
+        }
+        return item;
+      });
+      // await Promise.all(
+      //   data.map(async (obj) => {
+      //     obj.timeTypeData = await Allcode.find({ keyMap: obj.timeType}).select(
+      //       'valueEn valueVi'
+      //     );
+      //   }))
       if (data.length > 0) {
         result = {
           errCode: 0,

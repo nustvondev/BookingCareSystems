@@ -1,19 +1,9 @@
 import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faBedPulse,
-  faCircleQuestion,
-  faMagnifyingGlass,
-  faHospital,
-  faBrain,
-  faMobile,
-  faTooth,
-  faMicroscope,
-} from "@fortawesome/free-solid-svg-icons";
+import { faBars, faCircleQuestion } from "@fortawesome/free-solid-svg-icons";
 import { connect } from "react-redux";
 import "./HomeHeader.scss";
-import { FormattedDateParts, FormattedMessage } from "react-intl";
+import { FormattedMessage } from "react-intl";
 import { LANGUAGES } from "../../utils/constant";
 import { changeLanguageApp } from "../../store/actions";
 import { withRouter } from "react-router";

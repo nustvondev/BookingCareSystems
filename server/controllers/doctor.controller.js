@@ -58,54 +58,84 @@ const doctorController = {
   postInforDoctor: async (req, res, next) => {
     let response = { errCode: 1, message: 'Error from server...' };
     let inputData = req.body;
-
     try {
+      let infoRes = {};
+      let markdownRes = {};
+      const checkInfo = await DoctorInfor.findOne({
+        doctorId: inputData.doctorId,
+      });
+      const checkMarkdown = await Markdown.findOne({
+        doctorId: inputData.doctorId,
+      });
       if (
-        !inputData.doctorId || !inputData.contentHtml ||
-        !inputData.contentMarkdown || !inputData.selectedPrice ||
-        !inputData.selectedPayment || !inputData.selectedProvince ||
-        !inputData.nameClinic || !inputData.addressClinic ||
-        !inputData.note
+        !inputData.doctorId ||
+        !inputData.contentHtml ||
+        !inputData.contentMarkdown ||
+        !inputData.selectedPrice ||
+        !inputData.selectedPayment ||
+        !inputData.selectedProvince ||
+        !inputData.nameClinic ||
+        !inputData.addressClinic
       ) {
         response.errCode = 1;
         response.message = 'Missing parameter';
       } else {
-        const newMarkdown = new Markdown({
-          doctorId: inputData.doctorId,
-          contentHtml: inputData.contentHtml,
-          contentMarkdown: inputData.contentMarkdown
-        });
+        if (!checkMarkdown) {
+          const newMarkdown = new Markdown({
+            description: inputData.description,
+            doctorId: inputData.doctorId,
+            contentHtml: inputData.contentHtml,
+            contentMarkdown: inputData.contentMarkdown,
+          });
+          const datares = await newMarkdown.save();
+          markdownRes = datares;
+        } else {
+          const query = { doctorId: inputData.doctorId };
+          const updateMarkdown = {
+            description: inputData.description,
+            doctorId: inputData.doctorId,
+            contentHtml: inputData.contentHtml,
+            contentMarkdown: inputData.contentMarkdown,
+          };
+          const dataup = await Markdown.findOneAndUpdate(query, updateMarkdown);
+          markdownRes = dataup;
+        }
+        if (!checkInfo) {
+          const newDoctorInfor = new DoctorInfor({
+            doctorId: inputData.doctorId,
+            priceId: inputData.selectedPrice,
+            paymentId: inputData.selectedPayment,
+            provinceId: inputData.selectedProvince,
+            nameClinic: inputData.nameClinic,
+            addressClinic: inputData.addressClinic,
+            note: inputData.note,
+          });
+          const datares = await newDoctorInfor.save();
+          infoRes = datares;
+        } else {
+          const query = { doctorId: inputData.doctorId };
+          const updateDoctorInfor = {
+            doctorId: inputData.doctorId,
+            priceId: inputData.selectedPrice,
+            paymentId: inputData.selectedPayment,
+            provinceId: inputData.selectedProvince,
+            nameClinic: inputData.nameClinic,
+            addressClinic: inputData.addressClinic,
+            note: inputData.note,
+          };
 
-        const newDoctorInfor = new DoctorInfor({
-          selectedPrice: inputData.selectedPrice,
-          selectedPayment: inputData.selectedPayment,
-          selectedProvince: inputData.selectedProvince,
-          nameClinic: inputData.nameClinic,
-          addressClinic: inputData.addressClinic,
-          note: inputData.note
-        });
-
-        await newDoctorInfor.save();
-        await newMarkdown.save();
+          const dataup = await DoctorInfor.findOneAndUpdate(
+            query,
+            updateDoctorInfor
+          );
+          infoRes = dataup;
+        }
         response.errCode = 0;
         response.message = 'Create success';
-        response.data = { newMarkdown, newDoctorInfor };
-
-        // const update = {
-        //   ...inputData
-        // }
-
-        // const options = {
-        //   upsert: true, // Create a new document if it doesn't exist
-        //   new: true, // Return the updated document
-        // };
-
-        // await newDoctorInfor.findOneAndUpdate(filter, update, options);
-        // await newMarkdown.findOneAndUpdate(filter, update, options);
-
+        response.data = { markdownRes, infoRes };
       }
     } catch (error) {
-      next(createError(500, 'Server error'));
+      console.log(error.message);
     }
 
     return res.status(200).json(response);

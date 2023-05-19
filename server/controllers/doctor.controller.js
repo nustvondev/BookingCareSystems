@@ -3,6 +3,7 @@ import Allcode from '../models/allcode.model.js';
 import createError from '../utils/createError.js';
 import Markdown from '../models/markdown.model.js';
 import scheduleModel from '../models/schedule.model.js';
+import DoctorInfor from '../models/doctor_infor.model.js';
 import dotenv from 'dotenv';
 import allcodeModel from '../models/allcode.model.js';
 dotenv.config();
@@ -57,30 +58,59 @@ const doctorController = {
   postInforDoctor: async (req, res, next) => {
     let response = { errCode: 1, message: 'Error from server...' };
     let inputData = req.body;
-    // console.log(inputData);
+
     try {
-      //   console.log(inputData.doctorId);
-      //   console.log(inputData.contentHtml);
-      //   console.log(inputData.contentMarkdown);
       if (
-        !inputData.doctorId ||
-        !inputData.contentHtml ||
-        !inputData.contentMarkdown
+        !inputData.doctorId || !inputData.contentHtml ||
+        !inputData.contentMarkdown || !inputData.selectedPrice ||
+        !inputData.selectedPayment || !inputData.selectedProvince ||
+        !inputData.nameClinic || !inputData.addressClinic ||
+        !inputData.note
       ) {
         response.errCode = 1;
-        response.message = 'Missing paramester';
+        response.message = 'Missing parameter';
       } else {
-        const newMarkdown = new Markdown({ ...inputData });
+        const newMarkdown = new Markdown({
+          doctorId: inputData.doctorId,
+          contentHtml: inputData.contentHtml,
+          contentMarkdown: inputData.contentMarkdown
+        });
+
+        const newDoctorInfor = new DoctorInfor({
+          selectedPrice: inputData.selectedPrice,
+          selectedPayment: inputData.selectedPayment,
+          selectedProvince: inputData.selectedProvince,
+          nameClinic: inputData.nameClinic,
+          addressClinic: inputData.addressClinic,
+          note: inputData.note
+        });
+
+        await newDoctorInfor.save();
         await newMarkdown.save();
         response.errCode = 0;
         response.message = 'Create success';
-        response.data = newMarkdown;
+        response.data = { newMarkdown, newDoctorInfor };
+
+        // const update = {
+        //   ...inputData
+        // }
+
+        // const options = {
+        //   upsert: true, // Create a new document if it doesn't exist
+        //   new: true, // Return the updated document
+        // };
+
+        // await newDoctorInfor.findOneAndUpdate(filter, update, options);
+        // await newMarkdown.findOneAndUpdate(filter, update, options);
+
       }
     } catch (error) {
-      next(createError(500, 'server error'));
+      next(createError(500, 'Server error'));
     }
+
     return res.status(200).json(response);
   },
+
   getDetailDoctorById: async (req, res) => {
     let result = {};
     try {

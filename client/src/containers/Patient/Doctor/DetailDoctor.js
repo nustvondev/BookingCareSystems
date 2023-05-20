@@ -12,6 +12,7 @@ class DetailDoctor extends Component {
     super(props);
     this.state = {
       detailDoctor: {},
+      currentDoctorId: null,
     };
   }
 
@@ -22,6 +23,10 @@ class DetailDoctor extends Component {
       this.props.match.params.id
     ) {
       let id = this.props.match.params.id;
+      this.setState({
+        currentDoctorId: id,
+      });
+
       let res = await getDetailInforDoctor(id);
       if (res && res.errCode === 0) {
         this.setState({
@@ -31,7 +36,7 @@ class DetailDoctor extends Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState, snapshot) { }
+  componentDidUpdate(prevProps, prevState, snapshot) {}
 
   render() {
     let { language } = this.props;
@@ -50,8 +55,9 @@ class DetailDoctor extends Component {
             <div
               className="content-left"
               style={{
-                backgroundImage: `url(${detailDoctor && detailDoctor.image ? detailDoctor.image : ""
-                  })`,
+                backgroundImage: `url(${
+                  detailDoctor && detailDoctor.image ? detailDoctor.image : ""
+                })`,
               }}
             ></div>
             <div className="content-right">
@@ -76,7 +82,9 @@ class DetailDoctor extends Component {
               />
             </div>
             <div className="content-right">
-              <DoctorExtraInfor />
+              <DoctorExtraInfor
+                doctorIdFromParent={this.state.currentDoctorId}
+              />
             </div>
           </div>
           <div className="detail-infor-doctor">

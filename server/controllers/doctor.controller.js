@@ -153,12 +153,14 @@ const doctorController = {
       let positionData = await Allcode.find({ keyMap: 'R2' }).select(
         'valueEn valueVi -_id'
       );
-      let doctorInfor = await doctor_inforModel.findOne({ doctorId: req.query.id });
+      let doctorInfor = await doctor_inforModel.findOne({
+        doctorId: req.query.id,
+      });
       const userWithMarkdown = {
         ...user._doc,
         Markdown: markdownId,
         positionData: positionData,
-        doctorInfor: doctorInfor
+        doctorInfor: doctorInfor,
       };
       // console.log(userWithMarkdown);
       result = {
@@ -291,6 +293,44 @@ const doctorController = {
     } catch (error) {
       result = { errCode: 1, errMessage: 'Server error' };
       console.log(error.message);
+    }
+    return res.status(200).json(result);
+  },
+  getExraInforDoctorById: async (req, res) => {
+    let result = {};
+    const doctorIdInput = req.query.doctorId;
+    if (!doctorIdInput) {
+      result = { errCode: 1, errMessage: 'Missing required parameter!' };
+    } else {
+      try {
+        const allcodeType = await Allcode.find({}).select(
+          'keyMap valueEn valueVi -_id'
+        );
+
+        const allcodeMap = {};
+        allcodeType.forEach((code) => {
+          allcodeMap[code.keyMap] = {
+            valueEn: code.valueEn,
+            valueVi: code.valueVi,
+          };
+        });
+        const inforDoctor = await DoctorInfor.findOne({
+          doctorId: doctorIdInput,
+        });
+        let dataRes = { ...inforDoctor._doc };
+        if (allcodeMap.hasOwnProperty(dataRes.paymentId)) {
+          dataRes.paymentTypeData = allcodeMap[dataRes.paymentId];
+        }
+        if (allcodeMap.hasOwnProperty(dataRes.provinceId)) {
+          dataRes.provinceTypeData = allcodeMap[dataRes.provinceId];
+        }
+        if (allcodeMap.hasOwnProperty(dataRes.priceId)) {
+          dataRes.priceTypeData = allcodeMap[dataRes.priceId];
+        }
+        result = { errCode: 0, data: dataRes };
+      } catch (error) {
+        console.log(error.message);
+      }
     }
     return res.status(200).json(result);
   },

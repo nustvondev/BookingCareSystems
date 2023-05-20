@@ -15,7 +15,7 @@ export const migration = async () => {
     },
     {
       type: 'STATUS',
-      keyMapMap: 'S3',
+      keyMap: 'S3',
       valueEn: 'Done',
       valueVi: 'Đã khám xong',
     },

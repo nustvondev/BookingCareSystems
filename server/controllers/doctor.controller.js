@@ -6,6 +6,7 @@ import scheduleModel from '../models/schedule.model.js';
 import DoctorInfor from '../models/doctor_infor.model.js';
 import dotenv from 'dotenv';
 import allcodeModel from '../models/allcode.model.js';
+import doctor_inforModel from '../models/doctor_infor.model.js';
 dotenv.config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
@@ -152,10 +153,12 @@ const doctorController = {
       let positionData = await Allcode.find({ keyMap: 'R2' }).select(
         'valueEn valueVi -_id'
       );
+      let doctorInfor = await doctor_inforModel.findOne({ doctorId: req.query.id });
       const userWithMarkdown = {
         ...user._doc,
         Markdown: markdownId,
         positionData: positionData,
+        doctorInfor: doctorInfor
       };
       // console.log(userWithMarkdown);
       result = {

@@ -8,8 +8,8 @@ const HistorySchema = new Schema(
       require: true,
     },
     doctorId: {
-      type: String,
-      require: true,
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
     description: {
       type: String,

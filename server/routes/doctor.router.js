@@ -12,4 +12,5 @@ router.get(
   '/get-extra-infor-doctor-by-id',
   doctorController.getExraInforDoctorById
 );
+router.get('/get-profile-doctor-by-id', doctorController.getProfileDoctorById);
 export default router;

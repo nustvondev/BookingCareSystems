@@ -68,9 +68,9 @@ export const migration = async () => {
       valueEn: '4:00 PM - 5:00 PM',
       valueVi: '16:00 - 17:00',
     },
-    { type: 'POSITION', keyMap: 'P0', valueEn: 'None', valueVi: 'Bác sĩ' },
+    { type: 'POSITION', keyMap: 'P0', valueEn: 'Doctor', valueVi: 'Bác sĩ' },
     { type: 'POSITION', keyMap: 'P1', valueEn: 'Master', valueVi: 'Thạc sĩ' },
-    { type: 'POSITION', keyMap: 'P2', valueEn: 'Doctor', valueVi: 'Tiến sĩ' },
+    { type: 'POSITION', keyMap: 'P2', valueEn: 'PhD', valueVi: 'Tiến sĩ' },
     {
       type: 'POSITION',
       keyMap: 'P3',

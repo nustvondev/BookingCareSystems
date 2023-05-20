@@ -44,8 +44,8 @@ class DetailDoctor extends Component {
     let nameVi = "",
       nameEn = "";
     if (detailDoctor && detailDoctor.positionData) {
-      nameVi = `${detailDoctor.positionData[0].valueVi}, ${detailDoctor.firstName} ${detailDoctor.lastName}`;
-      nameEn = `${detailDoctor.positionData[0].valueEn}, ${detailDoctor.firstName} ${detailDoctor.lastName}`;
+      nameVi = `${detailDoctor.positionData.valueVi}, ${detailDoctor.lastName} ${detailDoctor.firstName}`;
+      nameEn = `${detailDoctor.positionData.valueEn}, ${detailDoctor.firstName} ${detailDoctor.lastName}`;
     }
     return (
       <>

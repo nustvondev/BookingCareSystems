@@ -60,9 +60,9 @@
       "text-address": "Địa chỉ khám",
       "price": "Giá khám: ",
       "detail": "Xem chi tiết",
-      "payment": " Người bệnh có thể thanh toán chi phí bằng hình thức:",
+      "payment": " Người bệnh có thể thanh toán chi phí bằng hình thức: ",
       "hide-price": "Ẩn bảng giá",
-      "note": "Ghi chú:"
+      "note": "Ghi chú: "
     },
     "booking-modal": {
       "title": "Thông tin đặt lịch khám bệnh",

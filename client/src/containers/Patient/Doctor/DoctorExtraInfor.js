@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import "./DoctorExtraInfor.scss";
 import { LANGUAGES } from "../../../utils";
 import { getExtraInforDoctorById } from "../../../services/userService";
-import { getScheduleDoctorByDate } from "../../../services/userService";
 import { FormattedMessage } from "react-intl";
 import { NumericFormat } from "react-number-format";
 

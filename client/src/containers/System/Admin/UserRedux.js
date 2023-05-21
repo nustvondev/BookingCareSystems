@@ -185,7 +185,7 @@ class UserRedux extends Component {
       position: user.positionId,
       avatar: "",
       action: CRUD_ACTIONS.EDIT,
-      previewImgURL: "",
+      previewImgURL: user.image,
     });
   };
 

@@ -31,7 +31,7 @@ const UserSchema = new Schema(
       type: String,
       default: 'O',
     },
-    genderData:{        
+    genderData: {
       type: Object,
     },
     image: {
@@ -44,7 +44,7 @@ const UserSchema = new Schema(
     positionId: {
       type: String,
     },
-    positionData:{        //Do tự thêm ở ngoài vào hoài nó ko cho nhưng khi bỏ vô đây r thêm nó lại cho
+    positionData: {        //Do tự thêm ở ngoài vào hoài nó ko cho nhưng khi bỏ vô đây r thêm nó lại cho
       type: Object,
     }
   },

@@ -60,8 +60,9 @@
       "text-address": "Địa chỉ khám",
       "price": "Giá khám: ",
       "detail": "Xem chi tiết",
-      "payment": " Người bệnh có thể thanh toán chi phí bằng hình thức:",
-      "hide-price": "Ẩn bảng giá"
+      "payment": " Người bệnh có thể thanh toán chi phí bằng hình thức: ",
+      "hide-price": "Ẩn bảng giá",
+      "note": "Ghi chú: "
     },
     "booking-modal": {
       "title": "Thông tin đặt lịch khám bệnh",
@@ -80,7 +81,7 @@
   },
   "admin": {
     "manage-doctor": {
-      "title": "Tạo thêm thông tin doctors",
+      "title": "Tạo thêm thông tin bác sĩ",
       "select-doctor": "Chọn bác sĩ",
       "intro": "Thông tin giới thiệu:",
       "add": "Tạo thông tin",

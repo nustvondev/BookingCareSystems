@@ -3,7 +3,10 @@ import Allcode from '../models/allcode.model.js';
 import createError from '../utils/createError.js';
 import Markdown from '../models/markdown.model.js';
 import scheduleModel from '../models/schedule.model.js';
+import DoctorInfor from '../models/doctor_infor.model.js';
 import dotenv from 'dotenv';
+import allcodeModel from '../models/allcode.model.js';
+import doctor_inforModel from '../models/doctor_infor.model.js';
 dotenv.config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
@@ -13,22 +16,34 @@ const doctorController = {
     if (!limit) limit = 10;
     try {
       let result = {};
-      let positionData = await Allcode.find({ keyMap: 'R2' }).select(
-        'valueEn valueVi -_id'
+      let positionData = await Allcode.find({ type: 'POSITION' }).select(
+        'valueEn valueVi keyMap -_id'
       );
+      let positionDataMap = {};
+      positionData.forEach(code => {
+        positionDataMap[code.keyMap] = {
+          valueEn: code.valueEn,
+          valueVi: code.valueVi,
+        };
+      });
+
       let response = await User.find({ roleId: 'R2' })
         .limit(+limit)
         .sort({ createdAt: -1 })
-        .select('-password')
-        .populate('');
-      await Promise.all(
-        response.map(async (obj) => {
-          obj.genderData = await Allcode.find({ keyMap: obj.gender }).select(
-            'valueEn valueVi -_id'
-          );
-          obj.positionData = positionData;
-        })
-      );
+        .select('-password');
+      let cloneResponse = response;
+      response.forEach((item) => {
+        const positionType = item.positionId;
+        // console.log(positionType)
+        if (positionDataMap.hasOwnProperty(positionType)) {
+          item.positionData = positionDataMap[positionType];
+        } else {
+          item.positionData = positionDataMap["P0"]
+        }
+        return item;
+      });
+
+
       result.errCode = 0;
       result.data = response;
       return res.status(200).json(result);
@@ -56,51 +71,126 @@ const doctorController = {
   postInforDoctor: async (req, res, next) => {
     let response = { errCode: 1, message: 'Error from server...' };
     let inputData = req.body;
-    // console.log(inputData);
     try {
-      //   console.log(inputData.doctorId);
-      //   console.log(inputData.contentHtml);
-      //   console.log(inputData.contentMarkdown);
+      let infoRes = {};
+      let markdownRes = {};
+      const checkInfo = await DoctorInfor.findOne({
+        doctorId: inputData.doctorId,
+      });
+      const checkMarkdown = await Markdown.findOne({
+        doctorId: inputData.doctorId,
+      });
       if (
         !inputData.doctorId ||
         !inputData.contentHtml ||
-        !inputData.contentMarkdown
+        !inputData.contentMarkdown ||
+        !inputData.selectedPrice ||
+        !inputData.selectedPayment ||
+        !inputData.selectedProvince ||
+        !inputData.nameClinic ||
+        !inputData.addressClinic
       ) {
         response.errCode = 1;
-        response.message = 'Missing paramester';
+        response.message = 'Missing parameter';
       } else {
-        const newMarkdown = new Markdown({ ...inputData });
-        await newMarkdown.save();
+        if (!checkMarkdown) {
+          const newMarkdown = new Markdown({
+            description: inputData.description,
+            doctorId: inputData.doctorId,
+            contentHtml: inputData.contentHtml,
+            contentMarkdown: inputData.contentMarkdown,
+          });
+          const datares = await newMarkdown.save();
+          markdownRes = datares;
+        } else {
+          const query = { doctorId: inputData.doctorId };
+          const updateMarkdown = {
+            description: inputData.description,
+            doctorId: inputData.doctorId,
+            contentHtml: inputData.contentHtml,
+            contentMarkdown: inputData.contentMarkdown,
+          };
+          const dataup = await Markdown.findOneAndUpdate(query, updateMarkdown);
+          markdownRes = dataup;
+        }
+        if (!checkInfo) {
+          const newDoctorInfor = new DoctorInfor({
+            doctorId: inputData.doctorId,
+            priceId: inputData.selectedPrice,
+            paymentId: inputData.selectedPayment,
+            provinceId: inputData.selectedProvince,
+            nameClinic: inputData.nameClinic,
+            addressClinic: inputData.addressClinic,
+            note: inputData.note,
+          });
+          const datares = await newDoctorInfor.save();
+          infoRes = datares;
+        } else {
+          const query = { doctorId: inputData.doctorId };
+          const updateDoctorInfor = {
+            doctorId: inputData.doctorId,
+            priceId: inputData.selectedPrice,
+            paymentId: inputData.selectedPayment,
+            provinceId: inputData.selectedProvince,
+            nameClinic: inputData.nameClinic,
+            addressClinic: inputData.addressClinic,
+            note: inputData.note,
+          };
+
+          const dataup = await DoctorInfor.findOneAndUpdate(
+            query,
+            updateDoctorInfor
+          );
+          infoRes = dataup;
+        }
         response.errCode = 0;
         response.message = 'Create success';
-        response.data = newMarkdown;
+        response.data = { markdownRes, infoRes };
       }
     } catch (error) {
-      next(createError(500, 'server error'));
+      console.log(error.message);
     }
+
     return res.status(200).json(response);
   },
+
   getDetailDoctorById: async (req, res) => {
     let result = {};
     try {
       if (!req.query.id) {
         result = { errCode: 1, errMessage: 'Missing required parameter!' };
+      } else {
+        let positionData = await Allcode.find({ type: 'POSITION' }).select(
+          'valueEn valueVi keyMap -_id'
+        );
+        let positionDataMap = {};
+        positionData.forEach(code => {
+          positionDataMap[code.keyMap] = {
+            valueEn: code.valueEn,
+            valueVi: code.valueVi,
+          };
+        });
+        let user = await User.findById(req.query.id).select('-password');
+        let markdownId = await Markdown.findOne({ doctorId: req.query.id });
+        let cloneUser = { ...user._doc };
+        if (positionDataMap.hasOwnProperty(cloneUser.positionId)) {
+          cloneUser.positionData = positionDataMap[cloneUser.positionId];
+        }
+        let doctorInfor = await doctor_inforModel.findOne({
+          doctorId: req.query.id,
+        });
+
+        const userWithMarkdown = {
+          ...cloneUser,
+          Markdown: markdownId,
+          doctorInfor: doctorInfor,
+        };
+        // console.log(userWithMarkdown);
+        result = {
+          errCode: 0,
+          data: userWithMarkdown,
+        };
       }
-      let user = await User.findById(req.query.id).select('-password');
-      let markdownId = await Markdown.findOne({ doctorId: req.query.id });
-      let positionData = await Allcode.find({ keyMap: 'R2' }).select(
-        'valueEn valueVi -_id'
-      );
-      const userWithMarkdown = {
-        ...user._doc,
-        Markdown: markdownId,
-        positionData: positionData,
-      };
-      // console.log(userWithMarkdown);
-      result = {
-        errCode: 0,
-        data: userWithMarkdown,
-      };
     } catch (error) {
       result = { errCode: 1, errMessage: 'Error sever' };
     }
@@ -110,7 +200,6 @@ const doctorController = {
   bulkCreateSchedule: async (req, res) => {
     let result = {};
     let inputData = req.body;
-    console.log(inputData);
     try {
       if (!inputData.arrSchedule) {
         result = { errCode: 1, errMessage: 'Missing required parameter!' };
@@ -163,15 +252,59 @@ const doctorController = {
     return res.status(200).json(result);
   },
   getScheduleByDate: async (req, res) => {
-    console.log(req.query.doctorId);
-    console.log(req.query.date);
+    // console.log(req.query.doctorId);
+    // console.log(req.query.date);
     let result = {};
 
     try {
-      const data = await scheduleModel.find({
+      /**
+       * Todo:
+       * - Lấy toàn bộ dữ liệu allcode kiểu TIME
+       * - Tạo object allcodekeymap
+       * - Thêm trường timeTypeData vào mỗi phần tử của mảng schedule
+       * * ví dụ:
+       * {
+       *     T4: { valueEn: '11:00 AM - 0:00 PM', valueVi: '11:00 - 12:00' },
+       *     T2: { valueEn: '9:00 AM - 10:00 AM', valueVi: '9:00 - 10:00' },
+       *     T5: { valueEn: '1:00 PM - 2:00 PM', valueVi: '13:00 - 14:00' },
+       *     ...
+       * }
+       * {
+       *     _id: new ObjectId("6465d581fe671a8eb29010a3"),
+       *     date: 2023-05-20T17:00:00.000Z,
+       *     doctorId: '6465cfb1d628bae812ebefcf',
+       *     timeTypeData: { valueEn: '2:00 PM - 3:00 PM', valueVi: '14:00 - 15:00' }
+       *     ...
+       * }
+       */
+
+      const timeType = await allcodeModel
+        .find({ type: 'TIME' })
+        .select('keyMap valueEn valueVi -_id');
+      const allcodeMap = {};
+      timeType.forEach((code) => {
+        allcodeMap[code.keyMap] = {
+          valueEn: code.valueEn,
+          valueVi: code.valueVi,
+        };
+      });
+      let data = await scheduleModel.find({
         doctorId: req.query.doctorId,
         date: req.query.date,
       });
+      data.forEach((item) => {
+        const timeType = item.timeType;
+        if (allcodeMap.hasOwnProperty(timeType)) {
+          item.timeTypeData = allcodeMap[timeType];
+        }
+        return item;
+      });
+      // await Promise.all(
+      //   data.map(async (obj) => {
+      //     obj.timeTypeData = await Allcode.find({ keyMap: obj.timeType}).select(
+      //       'valueEn valueVi'
+      //     );
+      //   }))
       if (data.length > 0) {
         result = {
           errCode: 0,
@@ -184,6 +317,107 @@ const doctorController = {
       result = { errCode: 1, errMessage: 'Server error' };
       console.log(error.message);
     }
+    return res.status(200).json(result);
+  },
+  getExraInforDoctorById: async (req, res) => {
+    let result = {};
+    const doctorIdInput = req.query.doctorId;
+    if (!doctorIdInput) {
+      result = { errCode: 1, errMessage: 'Missing required parameter!' };
+    } else {
+      try {
+        const allcodeType = await Allcode.find({}).select(
+          'keyMap valueEn valueVi -_id'
+        );
+
+        const allcodeMap = {};
+        allcodeType.forEach((code) => {
+          allcodeMap[code.keyMap] = {
+            valueEn: code.valueEn,
+            valueVi: code.valueVi,
+          };
+        });
+        const inforDoctor = await DoctorInfor.findOne({
+          doctorId: doctorIdInput,
+        });
+        let dataRes = { ...inforDoctor._doc };
+        if (allcodeMap.hasOwnProperty(dataRes.paymentId)) {
+          dataRes.paymentTypeData = allcodeMap[dataRes.paymentId];
+        }
+        if (allcodeMap.hasOwnProperty(dataRes.provinceId)) {
+          dataRes.provinceTypeData = allcodeMap[dataRes.provinceId];
+        }
+        if (allcodeMap.hasOwnProperty(dataRes.priceId)) {
+          dataRes.priceTypeData = allcodeMap[dataRes.priceId];
+        }
+        result = { errCode: 0, data: dataRes };
+      } catch (error) {
+        result = { errCode: 1, errMessage: 'Server error' };
+        console.log(error.message);
+      }
+    }
+    return res.status(200).json(result);
+  },
+  getProfileDoctorById: async (req, res) => {
+    let result = {};
+    const doctorIdInput = req.query.doctorId;
+    if (!doctorIdInput) {
+      result = { errCode: 1, errMessage: 'Missing required parameter!' };
+    } else {
+      try {
+        let responseData = {};
+        /**
+         * lay user
+         */
+        const allcode = await allcodeModel
+          .find({})
+          .select('keyMap valueEn valueVi');
+        let allcodeMap = {};
+        allcode.forEach((code) => {
+          allcodeMap[code.keyMap] = {
+            valueEn: code.valueEn,
+            valueVi: code.valueVi,
+          };
+        });
+
+        const user = await User.findOne({ _id: doctorIdInput }).select(
+          '-password -_id'
+        );
+        let cloneUser = { ...user._doc };
+        if (allcodeMap.hasOwnProperty(cloneUser.positionId)) {
+          cloneUser.positionData = allcodeMap[cloneUser.positionId];
+        }
+
+        const doctor_info = await DoctorInfor.findOne({
+          doctorId: doctorIdInput,
+        });
+        let cloneDoctorInfo = { ...doctor_info._doc };
+        if (allcodeMap.hasOwnProperty(cloneDoctorInfo.paymentId)) {
+          cloneDoctorInfo.paymentTypeData =
+            allcodeMap[cloneDoctorInfo.paymentId];
+        }
+        if (allcodeMap.hasOwnProperty(cloneDoctorInfo.provinceId)) {
+          cloneDoctorInfo.provinceTypeData =
+            allcodeMap[cloneDoctorInfo.provinceId];
+        }
+        if (allcodeMap.hasOwnProperty(cloneDoctorInfo.priceId)) {
+          cloneDoctorInfo.priceTypeData = allcodeMap[cloneDoctorInfo.priceId];
+        }
+
+        const markdown = await Markdown.findOne({ doctorId: doctorIdInput });
+        let cloneMarkdown = { ...markdown._doc };
+        responseData = {
+          ...cloneUser,
+          Doctor_Infor: cloneDoctorInfo,
+          Markdown: cloneMarkdown,
+        };
+        result = { errCode: 0, data: responseData };
+      } catch (error) {
+        result = { errCode: 1, errMessage: 'Server error' };
+        console.log(error.message);
+      }
+    }
+
     return res.status(200).json(result);
   },
 };

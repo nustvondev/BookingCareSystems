@@ -65,8 +65,8 @@ class OutStandingDoctor extends Component {
                   if (item.image) {
                     // imageBase64 = Buffer.from(item.image, 'base64').toString('binary');
                   }
-                  let nameVi = `${item.positionData[0].valueVi}, ${item.lastName} ${item.firstName} `;
-                  let nameEn = `${item.positionData[0].valueEn}, ${item.firstName} ${item.lastName}`;
+                  let nameVi = `${item.positionData.valueVi}, ${item.lastName} ${item.firstName}`;
+                  let nameEn = `${item.positionData.valueEn}, ${item.firstName} ${item.lastName}`;
                   return (
                     <div
                       className="section-customize"

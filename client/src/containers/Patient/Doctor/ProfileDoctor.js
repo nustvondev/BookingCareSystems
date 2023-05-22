@@ -6,7 +6,7 @@ import { getProfileDoctorById } from "../../../services/userService";
 import { LANGUAGES } from "../../../utils";
 import { NumericFormat } from "react-number-format";
 import _ from "lodash";
-import moment from 'moment';
+import moment from "moment";
 
 class ProfileDoctor extends Component {
   constructor(props) {
@@ -19,42 +19,49 @@ class ProfileDoctor extends Component {
   renderTimeBooking = (dataTime) => {
     let { language } = this.props;
     if (dataTime && !_.isEmpty(dataTime)) {
-
-      console.log("dataTime.date", dataTime.date)
-
       const tempdate = new Date(dataTime.date);
-      const optionsVi = { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' };
-      const optionsEn = { weekday: 'long', month: '2-digit', day: '2-digit', year: 'numeric' };
+      const optionsVi = {
+        weekday: "long",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      };
+      const optionsEn = {
+        weekday: "long",
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      };
 
-      let time = language === LANGUAGES.VI ?
-        dataTime.timeTypeData.valueVi : dataTime.timeTypeData.valueEn;
+      let time =
+        language === LANGUAGES.VI
+          ? dataTime.timeTypeData.valueVi
+          : dataTime.timeTypeData.valueEn;
 
-      let date = language === LANGUAGES.VI ?
-        tempdate.toLocaleDateString('vi', optionsVi)
-        :
-        tempdate.toLocaleDateString('en-US', optionsEn)
+      let date =
+        language === LANGUAGES.VI
+          ? tempdate.toLocaleDateString("vi", optionsVi)
+          : tempdate.toLocaleDateString("en-US", optionsEn);
       // moment.unix(+dataTime.date / 1000).format('dddd - DD/MM/YYYY')
       // :
       // moment.unix(+dataTime.date / 1000).locale('en').format('ddd - MM/DD/YYYY')
 
-      console.log("date: ", date)
       return (
         <>
-          <div>{time} - {date}</div>
+          <div>
+            {time} - {date}
+          </div>
         </>
-      )
+      );
     }
-    return <></>
-  }
-
+    return <></>;
+  };
 
   async componentDidMount() {
-    console.log(this.props.doctorId);
     let res = await this.getInforDoctor(this.props.doctorId);
     this.setState({
       dataProfile: res,
     });
-    console.log(res);
   }
 
   getInforDoctor = async (id) => {
@@ -92,8 +99,9 @@ class ProfileDoctor extends Component {
           <div
             className="content-left"
             style={{
-              backgroundImage: `url(${dataProfile && dataProfile.image ? dataProfile.image : ""
-                })`,
+              backgroundImage: `url(${
+                dataProfile && dataProfile.image ? dataProfile.image : ""
+              })`,
             }}
           ></div>
           <div className="content-right">
@@ -101,21 +109,17 @@ class ProfileDoctor extends Component {
               {language === LANGUAGES.VI ? nameVi : nameEn}
             </div>
             <div className="down">
-              {isShowDescriptionDoctor === true ?
+              {isShowDescriptionDoctor === true ? (
                 <>
-                  {dataProfile && dataProfile.Markdown
-                    && dataProfile.Markdown.description
-                    &&
-                    <span>
-                      {dataProfile.Markdown.description}
-                    </span>
-                  }
+                  {dataProfile &&
+                    dataProfile.Markdown &&
+                    dataProfile.Markdown.description && (
+                      <span>{dataProfile.Markdown.description}</span>
+                    )}
                 </>
-                :
-                <>
-                  {this.renderTimeBooking(dataTime)}
-                </>
-              }
+              ) : (
+                <>{this.renderTimeBooking(dataTime)}</>
+              )}
               {dataProfile &&
                 dataProfile.Markdown &&
                 dataProfile.Markdown.description && (

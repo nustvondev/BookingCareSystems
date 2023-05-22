@@ -20,7 +20,7 @@ const doctorController = {
         'valueEn valueVi keyMap -_id'
       );
       let positionDataMap = {};
-      positionData.forEach(code => {
+      positionData.forEach((code) => {
         positionDataMap[code.keyMap] = {
           valueEn: code.valueEn,
           valueVi: code.valueVi,
@@ -38,11 +38,10 @@ const doctorController = {
         if (positionDataMap.hasOwnProperty(positionType)) {
           item.positionData = positionDataMap[positionType];
         } else {
-          item.positionData = positionDataMap["P0"]
+          item.positionData = positionDataMap['P0'];
         }
         return item;
       });
-
 
       result.errCode = 0;
       result.data = response;
@@ -164,7 +163,7 @@ const doctorController = {
           'valueEn valueVi keyMap -_id'
         );
         let positionDataMap = {};
-        positionData.forEach(code => {
+        positionData.forEach((code) => {
           positionDataMap[code.keyMap] = {
             valueEn: code.valueEn,
             valueVi: code.valueVi,
@@ -292,13 +291,19 @@ const doctorController = {
         doctorId: req.query.doctorId,
         date: req.query.date,
       });
-      data.forEach((item) => {
+      let getInfoDoctor = await User.findOne({
+        _id: req.query.doctorId,
+      }).select('-_id lastName firstName');
+      const cloneData = data.map((item) => ({ ...item._doc }));
+      cloneData.forEach((item) => {
         const timeType = item.timeType;
         if (allcodeMap.hasOwnProperty(timeType)) {
           item.timeTypeData = allcodeMap[timeType];
+          item.doctorData = getInfoDoctor;
         }
         return item;
       });
+      // console.log(data);
       // await Promise.all(
       //   data.map(async (obj) => {
       //     obj.timeTypeData = await Allcode.find({ keyMap: obj.timeType}).select(
@@ -308,7 +313,7 @@ const doctorController = {
       if (data.length > 0) {
         result = {
           errCode: 0,
-          data: data,
+          data: cloneData,
         };
       } else {
         result = { errCode: 1, errMessage: 'No data' };

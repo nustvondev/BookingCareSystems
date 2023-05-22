@@ -89,15 +89,58 @@ class BookingModal extends Component {
       selectedGender: selectedOption,
     });
   };
+  buildTimeBooking = (dataTime) => {
+    let { language } = this.props;
+    if (dataTime && !_.isEmpty(dataTime)) {
+      const tempdate = new Date(dataTime.date);
+      const optionsVi = {
+        weekday: "long",
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+      };
+      const optionsEn = {
+        weekday: "long",
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+      };
+
+      let time =
+        language === LANGUAGES.VI
+          ? dataTime.timeTypeData.valueVi
+          : dataTime.timeTypeData.valueEn;
+
+      let date =
+        language === LANGUAGES.VI
+          ? tempdate.toLocaleDateString("vi", optionsVi)
+          : tempdate.toLocaleDateString("en-US", optionsEn);
+      return `${time} - ${date}`;
+    }
+    return "";
+  };
+
+  buildDoctorName = (dataTime) => {
+    let { language } = this.props;
+    if (dataTime && !_.isEmpty(dataTime)) {
+      let name =
+        language === LANGUAGES.VI
+          ? `${dataTime.doctorData.lastName} ${dataTime.doctorData.firstName}`
+          : `${dataTime.doctorData.firstName} ${dataTime.doctorData.lastName}`;
+      return name;
+    }
+    return "";
+  };
 
   handleConfirmBooking = async () => {
     // validate input
     // !data.email || !data.doctorId || !data.timeType || !data.date
     let date = new Date(this.state.birthday).getTime();
-
+    let timeString = this.buildTimeBooking(this.props.dataTime);
+    let doctorName = this.buildDoctorName(this.props.dataTime);
     let res = await postPatientBookAppointment({
       fullName: this.state.fullName,
-      phoneNumber: this.state.fullName,
+      phoneNumber: this.state.phoneNumber,
       email: this.state.email,
       address: this.state.address,
       reason: this.state.reason,
@@ -105,14 +148,32 @@ class BookingModal extends Component {
       gender: this.state.selectedGender.value,
       doctorId: this.state.doctorId,
       timeType: this.state.timeType,
+      language: this.props.language,
+      timeString: timeString,
+      doctorName: doctorName,
+      doe: this.props.dataTime.date,
     });
 
     if (res && res.errCode === 0) {
-      toast.success("Booking a new appointment success");
+      if (this.props.language === "en") {
+        toast.success(
+          "Successfully booked a new appointment, please check your Email."
+        );
+      } else {
+        toast.success("Đặt hẹn mới thành công vui lòng kiểm tra Email.");
+      }
+
       this.props.closeBookingClose();
     } else {
-      console.log(this.props.language);
-      toast.error("Booking a new appointment error");
+      if (this.props.language === "en") {
+        toast.error(
+          "New appointment failed, please reschedule or refresh the page."
+        );
+      } else {
+        toast.error(
+          "Cuộc hẹn mới không thành công, vui lòng lên lịch lại hoặc làm mới trang."
+        );
+      }
     }
   };
 
@@ -132,7 +193,6 @@ class BookingModal extends Component {
         className={"booking-modal-container"}
         size="lg"
         centered
-        // backdrop={true}
       >
         <div className="booking-modal-content">
           <div className="booking-modal-header">

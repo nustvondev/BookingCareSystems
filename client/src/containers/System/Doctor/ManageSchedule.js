@@ -95,11 +95,19 @@ class ManageSchedule extends Component {
     let result = [];
 
     if (!currentDate) {
-      toast.error("Invalid date");
+      if (this.props.language === "en") {
+        toast.error("Invalid date");
+      } else {
+        toast.error("Ngày không hợp lệ.");
+      }
       return;
     }
     if (selectedDoctor && _.isEmpty(selectedDoctor)) {
-      toast.error("invalid selected doctor");
+      if (this.props.language === "en") {
+        toast.error("invalid selected doctor");
+      } else {
+        toast.error("Chưa chọn bác sĩ");
+      }
       return;
     }
 
@@ -116,7 +124,11 @@ class ManageSchedule extends Component {
           result.push(object);
         });
       } else {
-        toast.error("Invalid selected time");
+        if (this.props.language === "en") {
+          toast.error("Invalid selected time");
+        } else {
+          toast.error("Ngày chọn không hợp lệ");
+        }
         return;
       }
     }
@@ -127,13 +139,18 @@ class ManageSchedule extends Component {
       formatedDate: formatedDate,
     });
     if (res.errCode === 0) {
-      toast.success("Save successs!");
+      if (this.props.language === "en") {
+        toast.success("Save success");
+      } else {
+        toast.error("Lưu thành công");
+      }
     } else {
-      toast.error("Cannot save");
+      if (this.props.language === "en") {
+        toast.error("Cannot save");
+      } else {
+        toast.error("Không thể lưu dữ liệu.");
+      }
     }
-
-    // console.log(res);
-    // console.log("check result: ", result);
   };
   render() {
     let { rangeTime } = this.state;

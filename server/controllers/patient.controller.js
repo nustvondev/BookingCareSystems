@@ -84,6 +84,38 @@ const patientController = {
       });
     }
   },
+  postVerifyBookAppointment: async (req, res) => {
+    let result = {};
+    const data = req.body;
+    if (!data.token || !data.doctorId) {
+      result = { errCode: 1, errMessage: 'Missing parameter' };
+    } else {
+      try {
+        let appointment = await Booking.findOne({
+          doctorId: data.doctorId,
+          token: data.token,
+          statusId: 'S1',
+        });
+        if (appointment) {
+          appointment.statusId = 'S2';
+          await appointment.save();
+          result = {
+            errCode: 0,
+            errMessage: 'Update the appointment success',
+          };
+        } else {
+          result = {
+            errCode: 2,
+            errMessage: 'Appointment has been activated or does not exist',
+          };
+        }
+      } catch (error) {
+        console.log(error.message);
+        result = { errCode: -1, errMessage: 'Error from the server' };
+      }
+    }
+    return res.status(200).json(result);
+  },
 };
 
 export default patientController;

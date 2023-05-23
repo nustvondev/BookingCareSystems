@@ -28,6 +28,9 @@ const BookingSchema = new Schema(
     doe: {
       type: Date,
     },
+    token: {
+      type: String,
+    },
   },
   {
     timestamps: true,

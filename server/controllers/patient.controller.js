@@ -2,6 +2,7 @@ import User from '../models/user.model.js';
 import Booking from '../models/booking.model.js';
 import dotenv from 'dotenv';
 import emailService from '../utils/emailService.js';
+import { v4 as uuidv4 } from 'uuid';
 dotenv.config();
 let buildUrlEmail = (doctorId, token) => {
   let result = `${process.env.URL_REACT}/verify-booking?token=${token}&doctorId=${doctorId}`;
@@ -26,17 +27,8 @@ const patientController = {
         });
       } else {
         const data = req.body;
-        const dataRes = {
-          reciverEmail: data.email,
-          patientName: data.fullName,
-          time: data.timeString,
-          doctorName: data.doctorName,
-          language: data.language,
-          redirectLink: buildUrlEmail(
-            data.doctorId,
-            '1761761626261726261262612617'
-          ),
-        };
+        // generate token
+        const token = uuidv4();
         await emailService.sendSimpleEmail({
           reciverEmail: data.email,
           patientName: data.fullName,
@@ -44,13 +36,8 @@ const patientController = {
           doctorName: data.doctorName,
           language: data.language,
           reason: data.reason,
-          redirectLink: buildUrlEmail(
-            data.doctorId,
-            '1761761626261726261262612617'
-          ),
+          redirectLink: buildUrlEmail(data.doctorId, token),
         });
-
-        console.log(dataRes);
         const updateUser = {
           email: req.body.email,
           gender: req.body.gender,
@@ -58,7 +45,6 @@ const patientController = {
           phonenumber: req.body.phoneNumber,
           address: req.body.address,
         };
-        console.log(updateUser);
         let infor = await User.findOneAndUpdate(
           { email: req.body.email },
           updateUser,
@@ -73,6 +59,7 @@ const patientController = {
           timeType: req.body.timeType,
           doe: req.body.doe,
           content: req.body.reason,
+          token: token,
         };
 
         if (infor) {

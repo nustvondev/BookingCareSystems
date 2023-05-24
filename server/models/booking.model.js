@@ -22,6 +22,15 @@ const BookingSchema = new Schema(
     timeType: {
       type: String,
     },
+    content: {
+      type: String,
+    },
+    doe: {
+      type: Date,
+    },
+    token: {
+      type: String,
+    },
   },
   {
     timestamps: true,

@@ -11,7 +11,10 @@ const ClinicSchema = new Schema(
       type: String,
       require: true,
     },
-    description: {
+    descriptionMarkdown: {
+      type: String,
+    },
+    descriptionHTML: {
       type: String,
     },
     image: {

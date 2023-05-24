@@ -35,13 +35,6 @@ class OutStandingDoctor extends Component {
     }
   };
   render() {
-    let setting = {
-      dots: false,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 4,
-      slidesToScroll: 1,
-    };
     let arrDoctors = this.state.arrDoctors;
     let { language } = this.props;
     arrDoctors = arrDoctors.concat(arrDoctors).concat(arrDoctors);
@@ -61,10 +54,6 @@ class OutStandingDoctor extends Component {
               {arrDoctors &&
                 arrDoctors.length > 0 &&
                 arrDoctors.map((item, index) => {
-                  let imageBase64 = "";
-                  if (item.image) {
-                    // imageBase64 = Buffer.from(item.image, 'base64').toString('binary');
-                  }
                   let nameVi = `${item.positionData.valueVi}, ${item.lastName} ${item.firstName}`;
                   let nameEn = `${item.positionData.valueEn}, ${item.firstName} ${item.lastName}`;
                   return (

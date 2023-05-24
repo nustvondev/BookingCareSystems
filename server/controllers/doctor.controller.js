@@ -7,6 +7,7 @@ import DoctorInfor from '../models/doctor_infor.model.js';
 import dotenv from 'dotenv';
 import allcodeModel from '../models/allcode.model.js';
 import doctor_inforModel from '../models/doctor_infor.model.js';
+import doctor_clinic_specialtyModel from '../models/doctor_clinic_specialty.model.js';
 dotenv.config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
@@ -79,6 +80,12 @@ const doctorController = {
       const checkMarkdown = await Markdown.findOne({
         doctorId: inputData.doctorId,
       });
+      const checkSpecialtyClinicDoctor =
+        await doctor_clinic_specialtyModel.findOne({
+          doctorId: inputData.doctorId,
+          clinicId: inputData.clinicId,
+          specialtyId: inputData.specialtyId,
+        });
       if (
         !inputData.doctorId ||
         !inputData.contentHtml ||
@@ -87,7 +94,9 @@ const doctorController = {
         !inputData.selectedPayment ||
         !inputData.selectedProvince ||
         !inputData.nameClinic ||
-        !inputData.addressClinic
+        !inputData.addressClinic ||
+        !inputData.specialtyId ||
+        !inputData.clinicId
       ) {
         response.errCode = 1;
         response.message = 'Missing parameter';
@@ -121,6 +130,8 @@ const doctorController = {
             nameClinic: inputData.nameClinic,
             addressClinic: inputData.addressClinic,
             note: inputData.note,
+            specialtyId: inputData.specialtyId,
+            clinicId: inputData.clinicId,
           });
           const datares = await newDoctorInfor.save();
           infoRes = datares;
@@ -134,6 +145,8 @@ const doctorController = {
             nameClinic: inputData.nameClinic,
             addressClinic: inputData.addressClinic,
             note: inputData.note,
+            specialtyId: inputData.specialtyId,
+            clinicId: inputData.clinicId,
           };
 
           const dataup = await DoctorInfor.findOneAndUpdate(
@@ -141,6 +154,29 @@ const doctorController = {
             updateDoctorInfor
           );
           infoRes = dataup;
+        }
+        if (!checkSpecialtyClinicDoctor) {
+          const newSpecialtyClinicDoctor = new doctor_clinic_specialtyModel({
+            doctorId: inputData.doctorId,
+            clinicId: inputData.clinicId,
+            specialtyId: inputData.specialtyId,
+          });
+          await newSpecialtyClinicDoctor.save();
+        } else {
+          const query = {
+            doctorId: inputData.doctorId,
+            clinicId: inputData.clinicId,
+            specialtyId: inputData.specialtyId,
+          };
+          const updateSpecialtyClinicDoctor = {
+            doctorId: inputData.doctorId,
+            clinicId: inputData.clinicId,
+            specialtyId: inputData.specialtyId,
+          };
+          await doctor_clinic_specialtyModel.findOneAndUpdate(
+            query,
+            updateSpecialtyClinicDoctor
+          );
         }
         response.errCode = 0;
         response.message = 'Create success';

@@ -101,7 +101,6 @@ class UserRedux extends Component {
   handleUpload = async () => {
     this.setState({ uploading: true });
     const urlImage = await upload(this.state.fileImage);
-    console.log(urlImage);
     this.setState({ avatar: urlImage });
     this.setState({ uploading: false });
     this.setState({ previewImgURL: urlImage });

@@ -39,6 +39,7 @@ const patientController = {
           redirectLink: buildUrlEmail(data.doctorId, token),
         });
         const updateUser = {
+          lastName: req.body.fullName,
           email: req.body.email,
           gender: req.body.gender,
           roleId: 'R3',

@@ -7,6 +7,8 @@ import { getAllClinic } from "../../../services/userService";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+import { withRouter } from "react-router";
+
 class MedicalFacility extends Component {
   constructor(props) {
     super(props);
@@ -77,4 +79,6 @@ const mapDispatchToProps = (dispatch) => {
   return {};
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(MedicalFacility);
+export default withRouter(
+  connect(mapStateToProps, mapDispatchToProps)(MedicalFacility)
+);

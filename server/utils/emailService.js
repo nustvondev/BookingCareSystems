@@ -50,7 +50,7 @@ const emailService = {
               filename: `remedy-${
                 dataSend.patientId
               }-${new Date().getTime()}.png`,
-              content: null, //file note here
+              content: dataSend.imgBase64.split('base64,')[1],
               encoding: 'base64',
             },
           ],

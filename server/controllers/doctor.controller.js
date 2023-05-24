@@ -8,6 +8,10 @@ import dotenv from 'dotenv';
 import allcodeModel from '../models/allcode.model.js';
 import doctor_inforModel from '../models/doctor_infor.model.js';
 import doctor_clinic_specialtyModel from '../models/doctor_clinic_specialty.model.js';
+import Booking from '../models/booking.model.js';
+import userModel from '../models/user.model.js';
+import bookingModel from '../models/booking.model.js';
+import emailService from '../utils/emailService.js';
 dotenv.config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
@@ -459,6 +463,130 @@ const doctorController = {
       }
     }
 
+    return res.status(200).json(result);
+  },
+  getListPatientForDoctor: async (req, res) => {
+    let result = {};
+    const doctorId = req.query.doctorId;
+    const date = req.query.date;
+
+    try {
+      const allcode = await allcodeModel
+        .find({})
+        .select('keyMap valueEn valueVi');
+      let allcodeMap = {};
+      allcode.forEach((code) => {
+        allcodeMap[code.keyMap] = {
+          valueEn: code.valueEn,
+          valueVi: code.valueVi,
+        };
+      });
+      if (!doctorId || !date) {
+        result = {
+          errCode: 1,
+          errMessage: 'Missing required parameters',
+        };
+      } else {
+        let data = await Booking.find({
+          statusId: 'S2',
+          doctorId: doctorId,
+          doe: date,
+        });
+        let cloneData = data.map((item) => ({ ...item._doc }));
+
+        // cloneData.forEach(async (item) => {
+        //   let clonePatient = {};
+        //   let patientData = await userModel
+        //     .findOne({ _id: item.patientId })
+        //     .select('email firstName address gender');
+
+        //   if (patientData) {
+        //     clonePatient = { ...patientData._doc };
+        //     if (allcodeMap.hasOwnProperty(clonePatient.gender)) {
+        //       clonePatient.genderData = allcodeMap[clonePatient.gender];
+        //     }
+        //     item.patientData = clonePatient;
+        //     if (allcodeMap.hasOwnProperty(item.timeType)) {
+        //       item.timeTypeDataPatient = allcodeMap[item.timeType];
+        //     }
+        //     return item;
+        //   }
+        // });
+
+        /**
+         * forEach không chờ đợi các hàm bất đồng bộ hoàn thành, mà tiếp tục thực
+         * hiện các lần lặp tiếp theo ngay sau khi gọi hàm bất đồng bộ, nên cloneData
+         * đã được gán giá trị trước khi các hàm bất đồng bộ hoàn thành và trả về kết quả.
+         */
+        for (let i = 0; i < cloneData.length; i++) {
+          let item = cloneData[i];
+          let clonePatient = {};
+          let patientData = await userModel
+            .findOne({ _id: item.patientId })
+            .select('email lastName address gender');
+
+          if (patientData) {
+            clonePatient = { ...patientData._doc };
+            if (allcodeMap.hasOwnProperty(clonePatient.gender)) {
+              clonePatient.genderData = allcodeMap[clonePatient.gender];
+            }
+            item.patientData = clonePatient;
+            if (allcodeMap.hasOwnProperty(item.timeType)) {
+              item.timeTypeDataPatient = allcodeMap[item.timeType];
+            }
+          }
+        }
+        result = {
+          errCode: 0,
+          data: cloneData,
+        };
+      }
+    } catch (error) {
+      result = {
+        errCode: -1,
+        errMessage: 'Error from the server',
+      };
+    }
+    return res.status(200).json(result);
+  },
+  sendRemedy: async (req, res) => {
+    let result = {};
+    let data = req.body;
+    if (
+      !data.email ||
+      !data.doctorId ||
+      !data.patientId ||
+      !data.timeType ||
+      !data.imgBase64
+    ) {
+      result = {
+        errCode: 1,
+        errMessage: 'Missing required parameters',
+      };
+    } else {
+      try {
+        let appointment = await bookingModel.findOne({
+          doctorId: data.doctorId,
+          patientId: data.patientId,
+          timeType: data.timeType,
+          statusId: 'S2',
+        });
+        if (appointment) {
+          appointment.statusId = 'S3';
+          await appointment.save();
+        }
+        await emailService.sendAttachment(data);
+        result = {
+          errCode: 0,
+          data: data,
+        };
+      } catch (error) {
+        result = {
+          errCode: -1,
+          errMessage: 'Error from the server',
+        };
+      }
+    }
     return res.status(200).json(result);
   },
 };

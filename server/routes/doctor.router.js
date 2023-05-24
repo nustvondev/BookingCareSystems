@@ -13,4 +13,9 @@ router.get(
   doctorController.getExraInforDoctorById
 );
 router.get('/get-profile-doctor-by-id', doctorController.getProfileDoctorById);
+router.get(
+  '/get-list-patient-for-doctor',
+  doctorController.getListPatientForDoctor
+);
+router.post('/send-remedy', doctorController.sendRemedy);
 export default router;

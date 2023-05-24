@@ -74,7 +74,6 @@ class ManageSpecialty extends Component {
           : "Something wrongs...";
 
       toast.error(messageNotice);
-      console.log("check res: ", res);
     }
   };
   handleUpload = async () => {

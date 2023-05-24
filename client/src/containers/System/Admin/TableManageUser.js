@@ -45,7 +45,6 @@ class TableManageUser extends Component {
 
   handleEditUser = (user) => {
     this.props.handleEditUserFromParent(user);
-    console.log(user);
   };
 
   /** Life cycle

@@ -73,7 +73,7 @@ class OutStandingDoctor extends Component {
                           <div>
                             {language === LANGUAGES.VI ? nameVi : nameEn}
                           </div>
-                          <div>Cơ Xương Khớp</div>
+                          <div>{item.specialtyData.specialtyName}</div>
                         </div>
                       </div>
                     </div>

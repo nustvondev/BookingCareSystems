@@ -12,6 +12,7 @@ import Booking from '../models/booking.model.js';
 import userModel from '../models/user.model.js';
 import bookingModel from '../models/booking.model.js';
 import emailService from '../utils/emailService.js';
+import specialtyModel from '../models/specialty.model.js';
 dotenv.config();
 const MAX_NUMBER_SCHEDULE = process.env.MAX_NUMBER_SCHEDULE;
 
@@ -36,20 +37,34 @@ const doctorController = {
         .limit(+limit)
         .sort({ createdAt: -1 })
         .select('-password');
-      let cloneResponse = response;
-      response.forEach((item) => {
+      let specialtyData = await specialtyModel
+        .find({})
+        .select('-descriptionMarkdown -descriptionHTML -image');
+      let specialtyMap = {};
+      specialtyData.map((code) => {
+        specialtyMap[code._id] = {
+          specialtyName: code.name,
+        };
+      });
+      console.log(specialtyMap);
+      let cloneRes = response.map((item) => ({ ...item._doc }));
+
+      for (let item of cloneRes) {
         const positionType = item.positionId;
-        // console.log(positionType)
         if (positionDataMap.hasOwnProperty(positionType)) {
           item.positionData = positionDataMap[positionType];
         } else {
           item.positionData = positionDataMap['P0'];
         }
-        return item;
-      });
+        let info = await doctor_inforModel.findOne({ doctorId: item._id });
+        if (specialtyMap.hasOwnProperty(info.specialtyId)) {
+          item.specialtyData = specialtyMap[info.specialtyId];
+        }
+      }
+      console.log(cloneRes);
 
       result.errCode = 0;
-      result.data = response;
+      result.data = cloneRes;
       return res.status(200).json(result);
     } catch (e) {
       console.log(e);

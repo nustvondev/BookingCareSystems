@@ -56,6 +56,9 @@ class OutStandingDoctor extends Component {
                 arrDoctors.map((item, index) => {
                   let nameVi = `${item.positionData.valueVi}, ${item.lastName} ${item.firstName}`;
                   let nameEn = `${item.positionData.valueEn}, ${item.firstName} ${item.lastName}`;
+                  let specialtyNameDisplay = item.specialtyData.specialtyName
+                    ? item.specialtyData.specialtyName
+                    : " ";
                   return (
                     <div
                       className="section-customize"
@@ -73,7 +76,7 @@ class OutStandingDoctor extends Component {
                           <div>
                             {language === LANGUAGES.VI ? nameVi : nameEn}
                           </div>
-                          <div>{item.specialtyData.specialtyName}</div>
+                          <div>{specialtyNameDisplay}</div>
                         </div>
                       </div>
                     </div>

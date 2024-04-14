@@ -1,12 +1,12 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import "./Specialty.scss";
-import { FormattedDateParts, FormattedMessage } from "react-intl";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import { getAllSpecialty } from "../../../services/userService";
 import { withRouter } from "react-router";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import { getAllSpecialty } from "../../../services/userService";
+import "./Specialty.scss";
 
 class Specialty extends Component {
   constructor(props) {

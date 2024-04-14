@@ -1,12 +1,11 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
-import "./ManageSpecialty.scss";
 import MarkdownIt from "markdown-it";
+import React, { Component } from "react";
 import MdEditor from "react-markdown-editor-lite";
-import { CommonUtils, upload } from "../../../utils";
-import { createNewSpecialty } from "../../../services/userService";
+import { connect } from "react-redux";
 import { toast } from "react-toastify";
+import { createNewSpecialty } from "../../../services/userService";
+import { upload } from "../../../utils";
+import "./ManageSpecialty.scss";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 

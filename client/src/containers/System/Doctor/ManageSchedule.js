@@ -1,15 +1,14 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import "./ManageSchedule.scss";
-import { FormattedMessage } from "react-intl";
-import Select from "react-select";
-import * as actions from "../../../store/actions";
-import { LANGUAGES, dateFormat } from "../../../utils";
-import DatePicker from "../../../components/Input/DatePicker";
-import moment from "moment";
-import { toast } from "react-toastify";
 import _ from "lodash";
+import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
+import { connect } from "react-redux";
+import Select from "react-select";
+import { toast } from "react-toastify";
+import DatePicker from "../../../components/Input/DatePicker";
 import { saveBulkScheduleDoctor } from "../../../services/userService";
+import * as actions from "../../../store/actions";
+import { LANGUAGES } from "../../../utils";
+import "./ManageSchedule.scss";
 
 class ManageSchedule extends Component {
   constructor(props) {
@@ -142,7 +141,7 @@ class ManageSchedule extends Component {
       if (this.props.language === "en") {
         toast.success("Save success");
       } else {
-        toast.error("Lưu thành công");
+        toast.success("Lưu thành công");
       }
     } else {
       if (this.props.language === "en") {

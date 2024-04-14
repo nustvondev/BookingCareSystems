@@ -8,7 +8,9 @@ import { LANGUAGES } from "../../utils/constant";
 import { changeLanguageApp } from "../../store/actions";
 import { withRouter } from "react-router";
 import logo from "../../assets/images/logo.svg";
+import { Link } from "react-router-dom";
 class HomeHeader extends Component {
+
   changeLanguage = (language) => {
     this.props.changeLanguageAppRedux(language);
   };
@@ -75,6 +77,9 @@ class HomeHeader extends Component {
               </div>
             </div>
             <div className="right-content">
+              <button className="btn btn-light">
+              <Link to={`/login`}>Quản trị</Link>
+              </button>
               <div className="support">
                 <FontAwesomeIcon
                   className="iconQuestion"

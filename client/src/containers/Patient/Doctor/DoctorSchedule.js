@@ -1,12 +1,10 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import "./DoctorSchedule.scss";
 import moment from "moment";
-import localization from "moment/locale/vi";
-import { LANGUAGES } from "../../../utils";
-import { getScheduleDoctorByDate } from "../../../services/userService";
+import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import { toast } from "react-toastify";
+import { connect } from "react-redux";
+import { getScheduleDoctorByDate } from "../../../services/userService";
+import { LANGUAGES } from "../../../utils";
+import "./DoctorSchedule.scss";
 import BookingModal from "./Modal/BookingModal";
 
 class DoctorSchedule extends Component {

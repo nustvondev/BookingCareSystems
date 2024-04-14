@@ -1,16 +1,17 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
-import "./BookingModal.scss";
-import { Modal } from "reactstrap";
-import ProfileDoctor from "../ProfileDoctor";
+/* eslint no-use-before-define: 0 */
 import _ from "lodash";
+import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
+import { connect } from "react-redux";
+import Select from "react-select";
+import { toast } from "react-toastify";
+import { Modal } from "reactstrap";
 import DatePicker from "../../../../components/Input/DatePicker";
+import { postPatientBookAppointment } from "../../../../services/userService";
 import * as actions from "../../../../store/actions";
 import { LANGUAGES } from "../../../../utils";
-import Select from "react-select";
-import { postPatientBookAppointment } from "../../../../services/userService";
-import { toast } from "react-toastify";
+import ProfileDoctor from "../ProfileDoctor";
+import "./BookingModal.scss";
 
 class BookingModal extends Component {
   constructor(props) {
@@ -42,6 +43,7 @@ class BookingModal extends Component {
         object.label = language === LANGUAGES.VI ? item.valueVi : item.valueEn;
         object.value = item.keyMap;
         result.push(object);
+        return result;
       });
     }
     return result;

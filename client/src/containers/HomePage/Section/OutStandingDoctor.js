@@ -1,12 +1,12 @@
 import React, { Component } from "react";
+import { FormattedMessage } from "react-intl";
 import { connect } from "react-redux";
-import { FormattedDateParts, FormattedMessage } from "react-intl";
+import { withRouter } from "react-router";
 import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
 import * as actions from "../../../store/actions";
 import { LANGUAGES } from "../../../utils";
-import { withRouter } from "react-router";
 
 class OutStandingDoctor extends Component {
   constructor(props) {

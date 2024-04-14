@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import "./MedicalFacility.scss";
-import { FormattedDateParts, FormattedMessage } from "react-intl";
 import Slider from "react-slick";
-import { getAllClinic } from "../../../services/userService";
-import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import "slick-carousel/slick/slick.css";
+import { getAllClinic } from "../../../services/userService";
+import "./MedicalFacility.scss";
 
 import { withRouter } from "react-router";
 

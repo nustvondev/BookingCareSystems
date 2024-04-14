@@ -1,3 +1,4 @@
+/* eslint no-use-before-define: 0 */ 
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { push } from "connected-react-router";
@@ -109,7 +110,7 @@ class Login extends Component {
                     <span>Remember me</span>
                   </div>
                   <div className="forget-pass">
-                    <a href="#">Forgot Password ?</a>
+                    <div onClick={()=>{alert("Feature is not available!")}}>Forgot Password ?</div>
                   </div>
                   <button type="submit">LOG-IN</button>
                 </form>

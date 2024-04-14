@@ -46,7 +46,6 @@ const doctorController = {
           specialtyName: code.name,
         };
       });
-      console.log(specialtyMap);
       let cloneRes = response.map((item) => ({ ...item._doc }));
 
       for (let item of cloneRes) {
@@ -61,7 +60,7 @@ const doctorController = {
           item.specialtyData = specialtyMap[info.specialtyId];
         }
       }
-      console.log(cloneRes);
+
 
       result.errCode = 0;
       result.data = cloneRes;

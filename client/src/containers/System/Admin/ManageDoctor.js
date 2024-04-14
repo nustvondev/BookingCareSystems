@@ -1,15 +1,15 @@
+import MarkdownIt from "markdown-it";
 import React, { Component } from "react";
 import { FormattedMessage } from "react-intl";
-import { connect } from "react-redux";
-import "./TableManageUser.scss";
-import * as actions from "../../../store/actions";
-import MarkdownIt from "markdown-it";
 import MdEditor from "react-markdown-editor-lite";
 import "react-markdown-editor-lite/lib/index.css";
-import "./ManageDoctor.scss";
+import { connect } from "react-redux";
 import Select from "react-select";
-import { CRUD_ACTIONS, LANGUAGES } from "../../../utils";
 import { getDetailInforDoctor } from "../../../services/userService";
+import * as actions from "../../../store/actions";
+import { CRUD_ACTIONS, LANGUAGES } from "../../../utils";
+import "./ManageDoctor.scss";
+import "./TableManageUser.scss";
 
 const mdParser = new MarkdownIt(/* Markdown-it options */);
 
@@ -55,14 +55,14 @@ class ManageDoctor extends Component {
     let result = [];
     let { language } = this.props;
     if (inputData && inputData.length > 0) {
-      inputData.map((item, index) => {
+      inputData.map((item) => {
         if (type === "USERS") {
           let object = {};
           let labelVi = `${item.lastName} ${item.firstName}`;
           let labelEn = `${item.firstName} ${item.lastName}`;
           object.label = language === LANGUAGES.VI ? labelVi : labelEn;
           object.value = item._id;
-          result.push(object);
+          return result.push(object);
         }
         if (type === "PRICE") {
           let object = {};
@@ -85,7 +85,8 @@ class ManageDoctor extends Component {
             let object = {};
             object.label = item.name;
             object.value = item._id;
-            result.push(object);
+            
+            return result.push(object);
           });
         }
 
@@ -94,7 +95,7 @@ class ManageDoctor extends Component {
             let object = {};
             object.label = item.name;
             object.value = item._id;
-            result.push(object);
+            return result.push(object);
           });
         }
       });

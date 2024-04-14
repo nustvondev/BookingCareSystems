@@ -1,5 +1,7 @@
 //const Allcode = require('../models/allcode.model.js');
 import Allcode from '../models/allcode.model.js';
+import User from '../models/user.model.js';
+import bcrypt from 'bcrypt';
 
 export const migration = async () => {
   const allCodes = [
@@ -162,6 +164,18 @@ export const migration = async () => {
       valueVi: 'Khánh Hòa',
     },
   ];
+  const hash= bcrypt.hashSync("Admin123", 5);
+  let user=new User({
+    email:"admin@gmail.com",
+    password:hash,
+    firstName:"Admin",
+    lastName:"Nguyen",
+    address:"Tay Ninh",
+    phonenumber:"00987654321",
+    gender:"O",
+    image:"https://avatars.githubusercontent.com/u/51021128?v=4",
+    roleId:"R1",
+  })
 
   const counter = await Allcode.count({});
 
@@ -171,7 +185,8 @@ export const migration = async () => {
       console.log('Xoa data cu: ');
       console.log(removeData);
       try {
-        const insertData = await Allcode.insertMany(allCodes);
+        await Allcode.insertMany(allCodes);
+        await user.save();
         console.log('Mifration thanh cong!');
       } catch (error) {
         console.log(error.message);

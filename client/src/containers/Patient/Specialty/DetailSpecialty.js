@@ -1,17 +1,17 @@
+
+import _ from "lodash";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { FormattedMessage } from "react-intl";
-import "./DetailSpecialty.scss";
-import HomeHeader from "../../HomePage/HomeHeader";
-import DoctorSchedule from "../Doctor/DoctorSchedule";
-import DoctorExtraInfor from "../Doctor/DoctorExtraInfor";
-import ProfileDoctor from "../Doctor/ProfileDoctor";
 import {
-  getAllDetailSpecialtyById,
   getAllCodeService,
+  getAllDetailSpecialtyById,
 } from "../../../services/userService";
-import _ from "lodash";
 import { LANGUAGES } from "../../../utils";
+import HomeHeader from "../../HomePage/HomeHeader";
+import DoctorExtraInfor from "../Doctor/DoctorExtraInfor";
+import DoctorSchedule from "../Doctor/DoctorSchedule";
+import ProfileDoctor from "../Doctor/ProfileDoctor";
+import "./DetailSpecialty.scss";
 
 class DetailSpecialty extends Component {
   constructor(props) {
@@ -49,9 +49,9 @@ class DetailSpecialty extends Component {
         if (data && !_.isEmpty(res.data)) {
           let arr = data.doctorSpecialty;
           if (arr && arr.length > 0) {
-            arr.map((item) => {
-              arrDoctorId.push(item.doctorId);
-            });
+            arr.map((item) => (
+              arrDoctorId.push(item.doctorId)
+            ));
           }
         }
 
@@ -100,9 +100,9 @@ class DetailSpecialty extends Component {
         if (data && !_.isEmpty(res.data)) {
           let arr = data.doctorSpecialty;
           if (arr && arr.length > 0) {
-            arr.map((item) => {
-              arrDoctorId.push(item.doctorId);
-            });
+            arr.map((item) => (
+              arrDoctorId.push(item.doctorId)
+            ));
           }
         }
 
